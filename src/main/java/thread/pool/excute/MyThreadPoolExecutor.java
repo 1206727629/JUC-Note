@@ -9,11 +9,14 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @Author yangwentian5
  * @Date 2022/2/22 18:24
  * 创建线程的时候要时刻警惕并发的陷阱
+ * 我们定义一个线程池一共需要这么四个变量：核心线程数coreSize、最大线程数maxSize、阻塞队列BlockingQueue、拒绝策略RejectPolicy
  */
 public class MyThreadPoolExecutor implements Executor {
     /**
-     * TODO 并发操作的话，利用CAS的原子类可以理解，加上volatile就不得而知为什么了
-      */
+     * 当前正在运行的线程数
+     * 需要修改时线程间立即感知，所以使用AtomicInteger
+     * 或者也可以使用volatile并结合Unsafe做CAS操作（参考Unsafe篇章讲解）
+     */
     private volatile AtomicInteger runningCount = new AtomicInteger(0);
 
     /**
@@ -35,6 +38,7 @@ public class MyThreadPoolExecutor implements Executor {
     /**
      * 任务队列
      * 这个队列必须是阻塞队列
+     * ConcurrentLinkedQueue不是阻塞队列，不能运用在jdk的线程池中
      */
     private BlockingQueue<Runnable> taskQueue;
     /**
@@ -133,7 +137,7 @@ public class MyThreadPoolExecutor implements Executor {
             if (count >= max) {
                 return false;
             }
-            // 修改runningCount成功，可以创建线程
+            // 使用乐观锁比较。修改runningCount成功，可以创建线程
             if (runningCount.compareAndSet(count, count + 1)) {
                 // 线程的名字
                 String threadName = (core ? "core_" : "") + name + sequence.incrementAndGet();
@@ -162,6 +166,10 @@ public class MyThreadPoolExecutor implements Executor {
         return true;
     }
 
+    /**
+     * 从阻塞队列里获取任务
+     * @return
+     */
     private Runnable getTask() {
         try {
             // take()方法会一直阻塞直到取到任务为止
