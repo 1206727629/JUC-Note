@@ -157,7 +157,7 @@ public class FutureTask<T> implements Runnable, Future<T> {
                     // 此处必须把caller的CAS更新和park()方法分成两步处理，不能把park()放在CAS里面
                 } else if (!marked) {
                     // get方法在run方法之前调用，尝试更新调用者线程
-                    // 试想断点停在此处【本篇文章由公众号“彤哥读源码”原创】
+                    // 试想断点停在此处
                     // 此时state为NEW，让run()方法执行到底，它不会执行finish()中的unpark()方法
                     // 这时打开断点，这里会更新caller成功，但是循环从头再执行一遍发现state已经变了，
                     // 直接在上面的if(s>NEW)处跳出循环了，因为finish()在修改state内部
@@ -170,13 +170,14 @@ public class FutureTask<T> implements Runnable, Future<T> {
                     // 这时再打开断点，这里不会park
                     // 见unpark()方法的注释，上面写得很清楚：
                     // 如果线程执行了park()方法，那么执行unpark()方法会唤醒这个线程
-                    // 如果先执行了unpark()方法，那么线程下一次执行park()方法将不会阻塞
+                    // 如果先执行了unpark()方法，那么线程下一次执行park()方法将不会阻塞？？？这个让我很惊讶哈哈
                     LockSupport.park();
                 }
             }
         }
 
         // 如果任务已经执行完毕了，直接拿返回值即可
+        // 否则抛异常
         if (s == FINISHED) {
             return (T) result;
         }
