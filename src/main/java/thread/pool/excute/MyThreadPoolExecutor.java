@@ -1,8 +1,6 @@
 package thread.pool.excute;
 
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Executor;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -71,7 +69,9 @@ public class MyThreadPoolExecutor implements Executor {
     }
 
     public static void main(String[] args) {
-        Executor threadPool = new MyThreadPoolExecutor("test", 5, 10, new ArrayBlockingQueue<>(15), new DiscardRejectPolicy());
+        MyThreadPoolExecutor threadPool = new MyThreadPoolExecutor("test", 5, 10, new ArrayBlockingQueue<>(15), new DiscardRejectPolicy());
+        // 可以在这里取出工厂
+        ThreadFactory threadFactory = MyThreadPoolExecutor.defaultThreadFactory();
         AtomicInteger num = new AtomicInteger(0);
 
         for (int i = 0; i < 100; i++) {
@@ -174,11 +174,52 @@ public class MyThreadPoolExecutor implements Executor {
         try {
             // take()方法会一直阻塞直到取到任务为止
             return taskQueue.take();
+
         } catch (InterruptedException e) {
             // 线程中断了，返回null可以结束当前线程
             // 当前线程都要结束了，理应要把runningCount的数量减一
             runningCount.decrementAndGet();
             return null;
+        }
+    }
+
+    public static ThreadFactory defaultThreadFactory() {
+        return new DefaultThreadFactory();
+    }
+
+    static class DefaultThreadFactory implements ThreadFactory {
+        private static final AtomicInteger poolNumber = new AtomicInteger(1);
+        private final ThreadGroup group;
+        private final AtomicInteger threadNumber = new AtomicInteger(1);
+        private final String namePrefix;
+
+        DefaultThreadFactory() {
+            SecurityManager s = System.getSecurityManager();
+            group = (s != null) ? s.getThreadGroup() :
+                    Thread.currentThread().getThreadGroup();
+            namePrefix = "pool-" +
+                    poolNumber.getAndIncrement() +
+                    "-thread-";
+        }
+
+        /**
+         * 把名称和是否是守护进程当作构造方法的参数传进来就可以了
+         * @param r
+         * @return
+         */
+        @Override
+        public Thread newThread(Runnable r) {
+            Thread t = new Thread(group, r,
+                    namePrefix + threadNumber.getAndIncrement(),
+                    0);
+            if (t.isDaemon()){
+                t.setDaemon(false);
+            }
+
+            if (t.getPriority() != Thread.NORM_PRIORITY) {
+                t.setPriority(Thread.NORM_PRIORITY);
+            }
+            return t;
         }
     }
 }

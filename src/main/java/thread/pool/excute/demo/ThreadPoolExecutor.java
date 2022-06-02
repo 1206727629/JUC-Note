@@ -135,7 +135,7 @@ public class ThreadPoolExecutor {
 //                    return null;
 //                continue;
 //            }
-//
+//            已经通过getTask()取出来且返回的，实际上它们会正常执行完毕
 //            try {
 //                // 真正响应中断是在poll()方法或者take()方法中
 //                Runnable r = timed ?
