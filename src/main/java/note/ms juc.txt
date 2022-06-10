@@ -1,0 +1,70 @@
+JUC：
+
+创建线程池的4种方式
+线程池参数 以及提交任务后怎么执行
+线程池运作过程是怎样的，这里面的队列有哪些，无界对列当任务很多的时候或发生什么？线程池默认的队列是什么
+线上线程池打满，如何优化的？
+线程池有哪些类型，为什么要选这个，底层实现原理
+线程池的重要成员变量（我答了整个框架，Executor顶级接口，ExecutorService次级接口，ThreadPoolExecutor实现类，成员变量包括工厂ThreadFactory，阻塞队列Block Queue，三个关键大小的变量corePoolSize，maximumPoolSize，poolSize）
+ExecutorService用过吗？场景？FixedSizeThreadPool有哪些问题？
+FixedSizeThreadPool为什么会有OOM问题？
+线程池有哪些参数。默认的拒绝策略有哪些。最大线程数有什么用。
+ThreadPoolExecutor的内部工作原理。
+如果让你自己实现一个线程池，你会怎么实现（不会）
+简述线程池原理，FixedThreadPool用的阻塞队列是什么
+
+线程怎么销毁
+如何中断线程，await和sleep区别
+为什么需要多线程，如何理解的（答了充分利用CPU算力，然后问我如何利用，我说阻塞的时候可以切换到其他线程继续执行）
+如何实现线程同步（答了synchronized，ReentrantLock，CAS。应该再加一个ThreadLocal，还有原子类AtomicInteger）
+对多线程的理解？（答了看过多线程的源码包括如何实现多线程，继承Thread，实现Runnable，Callable，看了线程池架构的源码，对ThreadPoolExecutor有认识）追问线程池里有哪些重要的成员（corePoolSize，maximumPoolSize，poolSize，ThreadFactory，Blocking Queue，RejectionHandler等。）
+AQS还在哪有使用过？
+线程有哪些状态，等待状态怎么产生，死锁状态的变化过程，中止状态，interrupt()方法
+分布式环境下，怎么保证线程安全。
+你怎么理解线程安全，哪些场景会产生线程安全问题，有什么解决办法
+可重入锁reentrantlock（因为上一题提到了concurrenthashmap的segement继承了这个）
+扩展：java中如何查看线程状态，你知道那些java自带的命令
+sleep 和 wait区别
+线程安全的类有哪些，平时有使用么，用来解决什么问题
+了解哪些并发工具类
+
+说一下Java 中的锁是怎么实现的
+Java有哪些锁？Synchronized原理？ Synchronized 为什么要进行锁膨胀？ReentrantLock 原理？
+Lock的加锁 和解锁 过程 和公平锁 和非公平锁实现原理
+Conditional 源码有没有看过
+阻塞队列 源码有没有看过
+
+while(true)里面一直new thread().start()会有什么问题
+volatile作用，原理，怎么保证可见性的，内存屏障
+3.什么场景下，都用过哪些并发？你用多线程的时候 Synchrionzed和ReentranLock怎么选择的？选择原则是什么？
+volatile和transient关键字
+
+ConcurrentHashMap为什么是线程安全的？
+concurrenthashmap原理，put，get，size，扩容，怎么保证线程安全的，1.7和1.8的区别，为什么用synchronized，分段锁有什么问题，hash算法做了哪些优化
+
+
+threadlocal用过么，原理是什么。
+强引用、软引用、弱引用、虚引用有什么区别。
+ThreadLocal，原理以及使用的有什么注意的地方(内存泄漏)
+threadlocal用过么，什么场景下使用的，原理，hash冲突怎么办，扩容实现，会有线程安全问题么，内存泄漏产生原因，怎么解决
+
+reentrantlock的实现原理，加锁和释放锁的一个过程，aqs，公平和非公平，可重入，可中断怎么实现的
+synchronized是可重入锁吗（因为1.8的时候我提到了synchronized的锁升级）
+volatile关键字，他是如何保证可见性，有序性
+Java锁有了解吗？Synchronized和ReentrantLock区别？说说如何ReentrantLock如何实现超时锁的等待？
+Synchronized   1.8后左了那些优化
+volatile 关键字原理
+你了解那些锁，乐观锁和悲观锁，为什么读要加锁，乐观锁为什么适合读场景，写场景不行么，会有什么问题，cas原理
+单核cpu用volatile有用吗
+锁升级过程，轻量锁可以变成偏向锁么，偏向锁可以变成无锁么，自旋锁，对象头结构，锁状态变化过程
+
+什么情况下产生死锁，怎么排查，怎么解决
+
+Hashmap,concurrenthashmap,hashtable各自的特点区别。 jdk1.8都做了哪些改进？
+juc中的countdownlatch，其概念，使用场景。
+JUC包，CopyOnWriteArrayList是什么
+ConcurrentHashMap，1.7和1.8的区别
+讲讲concurrenthashmap如何实现并发 扩容呢
+那Map呢，Java里Map的多线程实现类，是什么，讲一下它的实现原理（答ConcurrentHashMap，讲了1.7用分段锁，数据均匀分布到Segments数组上。而1.8放弃了分段锁，使用和HashMap一样的哈希数组，但因为多线程环境下，全局变量都设置成了volatile防指令重排，还有nextTable也成为了全局volatile变量等等的，现在回想忘记说sizeCtl变量了。然后说底层主要使用了synchronized跟cas操作，现在回想应该再补充一下synchronized的锁升级，所以升级到1.8直接使用了synchronized。但当时这道题已经答了很多了，我看差不多得了，就没继续说了，打算如果追问的话再说。）
+
+手撕模拟多线程实现银行转帐（未同步与同步）；
