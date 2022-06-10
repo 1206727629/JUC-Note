@@ -27,9 +27,9 @@ MySQL存储引擎由哪些？他们有什么区别？应用场景是怎样的
 mysql索引左前缀原理，怎么优化，哪些字段适合建索引，索引有什么优缺点（这个我觉得可以再答答B+树左旋转、右旋转了）
 线上遇到过慢查询么，怎么定位，优化的，explain，using filesort表示什么意思，产生原因，怎么解决
 mysql聚簇索引，覆盖索引，底层结构，主键索引，没有主键怎么办，自动生成的主键有什么问题
-索引失效的原因可能是
+！索引失效的原因可能是
 b+树索引存储位置 覆盖索引 什么时候走索引比不走索引慢
-单索引和联合索引的区别 如何决定采用顺序
+！单索引和联合索引的区别 如何决定采用顺序
 查询一定时间段内的流水 如何建立索引
 mysql中有一个索引(a,b,c)，有一条sql，where a = 1 and b > 1 and c =1;可以用到索引么，
 1.以下查询你准备怎么去建索引和优化？
@@ -41,7 +41,7 @@ SELECT * FROM tableA LEFT JOIN tableB用on tableA.id = tableB.id和用where tabl
 可以通过offset和limit的方式来进行分页查，并且利用子查询来提高分页效率
 SELECT * FROM tableA WHERE  id >=
 (SELECT id FROM articles  WHERE col=A ORDER BY id LIMIT 10000000, 1) LIMIT 10
-说说Mysql索引建立策略？假如我给你三个字段, 性别, 年龄和身份证号, 哪个字段更适合做索引?
+！说说Mysql索引建立策略？假如我给你三个字段, 性别, 年龄和身份证号, 哪个字段更适合做索引?
 
 MySQL的事务隔离级别有哪些？以上事务隔离是如何实现的？
 ACID，一致性是如何实现的
