@@ -1,17 +1,19 @@
+彤哥读源码 线程池部分：ScheduledThreadPoolExecutor、ForkJoinPool
+
 JUC：
 
 创建线程池的4种方式
-线程池参数 以及提交任务后怎么执行
-线程池运作过程是怎样的，这里面的队列有哪些，无界对列当任务很多的时候或发生什么？线程池默认的队列是什么
+！线程池参数 以及提交任务后怎么执行
+！线程池运作过程是怎样的，这里面的队列有哪些，无界对列当任务很多的时候或发生什么？线程池默认的队列是什么
 线上线程池打满，如何优化的？
-线程池有哪些类型，为什么要选这个，底层实现原理
-线程池的重要成员变量（我答了整个框架，Executor顶级接口，ExecutorService次级接口，ThreadPoolExecutor实现类，成员变量包括工厂ThreadFactory，阻塞队列Block Queue，三个关键大小的变量corePoolSize，maximumPoolSize，poolSize）
-ExecutorService用过吗？场景？FixedSizeThreadPool有哪些问题？
-FixedSizeThreadPool为什么会有OOM问题？
-线程池有哪些参数。默认的拒绝策略有哪些。最大线程数有什么用。
-ThreadPoolExecutor的内部工作原理。
-如果让你自己实现一个线程池，你会怎么实现（不会）
-简述线程池原理，FixedThreadPool用的阻塞队列是什么
+！线程池有哪些类型，为什么要选这个，底层实现原理
+！线程池的重要成员变量（我答了整个框架，Executor顶级接口，ExecutorService次级接口，ThreadPoolExecutor实现类，成员变量包括工厂ThreadFactory，阻塞队列Block Queue，三个关键大小的变量corePoolSize，maximumPoolSize，poolSize）
+！ExecutorService用过吗？场景？FixedSizeThreadPool有哪些问题？
+！FixedSizeThreadPool为什么会有OOM问题？
+！线程池有哪些参数。默认的拒绝策略有哪些。最大线程数有什么用。
+！ThreadPoolExecutor的内部工作原理。
+！如果让你自己实现一个线程池，你会怎么实现（不会）
+！简述线程池原理，FixedThreadPool用的阻塞队列是什么
 
 线程怎么销毁
 如何中断线程，await和sleep区别

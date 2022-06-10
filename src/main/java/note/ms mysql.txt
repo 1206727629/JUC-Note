@@ -1,3 +1,5 @@
+极客时间《MySQL实战45讲》12、13、14、15讲略过，以后工作遇到再详细看细节
+
 MySQL:
 MySQL索引的原理是什么？
 ！MySQL innodb 引擎的索引结构，B+树一般都多高？ 层高怎么计算？
@@ -31,9 +33,9 @@ mysql聚簇索引，覆盖索引，底层结构，主键索引，没有主键怎
 b+树索引存储位置 覆盖索引 什么时候走索引比不走索引慢
 ！单索引和联合索引的区别 如何决定采用顺序
 查询一定时间段内的流水 如何建立索引
-mysql中有一个索引(a,b,c)，有一条sql，where a = 1 and b > 1 and c =1;可以用到索引么，
+！mysql中有一个索引(a,b,c)，有一条sql，where a = 1 and b > 1 and c =1;可以用到索引么，
 1.以下查询你准备怎么去建索引和优化？
-SELECT * FROM table WHERE A = 1 AND B = 2 AND C >3 ORDER BY D LIMIT 10000建立一ABDC的联合索引，因为最左匹配原则要求碰到> <就中止，所以如果是ABCD联合索引的话，D就没法命中。
+！SELECT * FROM table WHERE A = 1 AND B = 2 AND C >3 ORDER BY D LIMIT 10000建立一ABDC的联合索引，因为最左匹配原则要求碰到> <就中止，所以如果是ABCD联合索引的话，D就没法命中。
 2.JOIN查询时，以下两种方法有什么区别？哪一个更快？
 SELECT * FROM tableA LEFT JOIN tableB用on tableA.id = tableB.id和用where tableA.id = tableB.id
 讲真这个我还真没仔细研究过，如果有人有找到这个方面的相关资料发我一份，但是我按照直觉回答给回答对了, on更快一些，因为where是在最后数据都查出来的时候去进行的筛选， 而on是在连表的时候进行的过滤，两者操作的数量级别就不一样，而且如果是用where来过滤的话，应该是逐个比较，时间复杂度应该是O(n^2)， 用on的话，实际上是两个B+树索引在进行合并，或许可以利用B+树性质直接降低复杂度至O(logn)。 实际上这些都是我猜的，不过好像得到了面试官的认可hhh
@@ -43,7 +45,7 @@ SELECT * FROM tableA WHERE  id >=
 (SELECT id FROM articles  WHERE col=A ORDER BY id LIMIT 10000000, 1) LIMIT 10
 ！说说Mysql索引建立策略？假如我给你三个字段, 性别, 年龄和身份证号, 哪个字段更适合做索引?
 
-MySQL的事务隔离级别有哪些？以上事务隔离是如何实现的？
+！MySQL的事务隔离级别有哪些？以上事务隔离是如何实现的？
 ACID，一致性是如何实现的
 间隙锁原理，什么情况下会使用间隙锁，锁失效怎么办
 MySQL 行级锁，表级锁。意向锁 加锁时机是什么？ 项目中有没有使用过意向锁？
