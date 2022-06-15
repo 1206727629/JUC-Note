@@ -78,3 +78,9 @@ synchronized锁是对象，那锁住了一个同步方法后，该对象的其�
 丰衍面试：
 项目中有用到concurrentHashMap的地方嘛。具体底层是什么
 秒杀大促期间库存如何实时保证？
+
+蒸汽记忆面试：
+completablefuture和futureTask有什么区别
+进程和线程的区别
+创建线程的方式
+callable接口get返回结果是怎么实现的？
