@@ -41,9 +41,6 @@ volatile作用，原理，怎么保证可见性的，内存屏障
 3.什么场景下，都用过哪些并发？你用多线程的时候 Synchrionzed和ReentranLock怎么选择的？选择原则是什么？
 volatile和transient关键字
 
-ConcurrentHashMap为什么是线程安全的？
-concurrenthashmap原理，put，get，size，扩容，怎么保证线程安全的，1.7和1.8的区别，为什么用synchronized，分段锁有什么问题，hash算法做了哪些优化
-
 
 threadlocal用过么，原理是什么。
 强引用、软引用、弱引用、虚引用有什么区别。
@@ -59,15 +56,22 @@ volatile 关键字原理
 你了解那些锁，乐观锁和悲观锁，为什么读要加锁，乐观锁为什么适合读场景，写场景不行么，会有什么问题，cas原理
 单核cpu用volatile有用吗
 锁升级过程，轻量锁可以变成偏向锁么，偏向锁可以变成无锁么，自旋锁，对象头结构，锁状态变化过程
+JUC中的countdownlatch，其概念，使用场景。
+JUC包，CopyOnWriteArrayList是什么
 
 什么情况下产生死锁，怎么排查，怎么解决
 
-Hashmap,concurrenthashmap,hashtable各自的特点区别。 jdk1.8都做了哪些改进？
-juc中的countdownlatch，其概念，使用场景。
-JUC包，CopyOnWriteArrayList是什么
+ConcurrentHashMap与HashMap的数据结构是否一样？
+HashMap在多线程环境下何时会出现并发安全问题？
+ConcurrentHashMap为什么是线程安全的？
+ConcurrentHashMap原理，put，get，size，扩容，怎么保证线程安全的，1.7和1.8的区别，为什么用synchronized，分段锁有什么问题，hash算法做了哪些优化
+ConcurrentHashMap为什么key和value不能为null
+HashMap,ConcurrentHashMap,hashtable各自的特点区别。 jdk1.8都做了哪些改进？
 ConcurrentHashMap，1.7和1.8的区别
-讲讲concurrenthashmap如何实现并发 扩容呢
+讲讲ConcurrentHashMap如何实现并发 扩容呢
 那Map呢，Java里Map的多线程实现类，是什么，讲一下它的实现原理（答ConcurrentHashMap，讲了1.7用分段锁，数据均匀分布到Segments数组上。而1.8放弃了分段锁，使用和HashMap一样的哈希数组，但因为多线程环境下，全局变量都设置成了volatile防指令重排，还有nextTable也成为了全局volatile变量等等的，现在回想忘记说sizeCtl变量了。然后说底层主要使用了synchronized跟cas操作，现在回想应该再补充一下synchronized的锁升级，所以升级到1.8直接使用了synchronized。但当时这道题已经答了很多了，我看差不多得了，就没继续说了，打算如果追问的话再说。）
+ConcurrentHashMap是否是强一致性的？
+ConcurrentHashMap不能解决哪些问题？
 
 手撕模拟多线程实现银行转帐（未同步与同步）；
 

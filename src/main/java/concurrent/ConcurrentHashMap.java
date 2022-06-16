@@ -176,8 +176,7 @@ public class ConcurrentHashMap<K,V> {
 //                                if ((e = e.next) == null)
 //                                    break;
 //                            }
-//                        }
-//                        else if (f instanceof TreeBin) {
+//                        } else if (f instanceof TreeBin) {
 //                            // 如果是树节点
 //                            validated = true;
 //                            TreeBin<K,V> t = (TreeBin<K,V>)f;
@@ -258,7 +257,7 @@ public class ConcurrentHashMap<K,V> {
      *  Node为单向链表
      *
      * （1）如果桶数组未初始化，则初始化；
-     * （2）如果待插入的元素所在的桶为空，则尝试把此元素直接插入到桶的第一个位置；
+     * （2）如果待插入的元素所在的桶为空，则尝试把此元素直接插入到桶的第一个位置(注意，这里HashMap在多线程环境下，会赋值第一个元素的时候出现元素覆盖的问题，所以ConcurrentHashMap在这里使用了乐观锁保证)；
      * （3）如果正在扩容，则当前线程一起加入到扩容的过程中；
      * （4）如果待插入的元素所在的桶不为空且不在迁移元素，则锁住这个桶（分段锁）；
      * （5）如果当前桶中元素以链表方式存储，则在链表中寻找该元素或者插入元素；
@@ -267,7 +266,6 @@ public class ConcurrentHashMap<K,V> {
      * （8）如果元素不存在，整个Map的元素个数加1，并检查是否需要扩容；
      *
      * 添加元素操作中使用的锁主要有（自旋锁 + CAS + synchronized + 分段锁）
-     * 其中之一的cas就是往桶中插入第一个元素
      * @param
      */
     //    final V putVal(K key, V value, boolean onlyIfAbsent) {
@@ -290,9 +288,10 @@ public class ConcurrentHashMap<K,V> {
             // i是key所在桶的位置
 //            else if ((f = tabAt(tab, i = (n - 1) & hash)) == null) {
 //                // 如果要插入的元素所在的桶还没有元素，则把这个元素插入到这个桶中
+                  // 注意，这里HashMap在多线程环境下，会赋值第一个元素的时候出现元素覆盖的问题，所以ConcurrentHashMap在这里使用了乐观锁保证
 //                if (casTabAt(tab, i, null,
 //                        new Node<K,V>(hash, key, value, null)))
-//                    // 如果使用CAS插入元素时，发现已经有元素了，则进入下一次循环，重新操作
+//                    // 如果使用CAS插入元素时，发现已经有元素了，往下走
 //                    // 如果使用CAS插入元素成功，则break跳出循环，流程结束
 //                    break;                   // no lock when adding to empty bin
 //            }
@@ -312,6 +311,7 @@ public class ConcurrentHashMap<K,V> {
 //                    if (tabAt(tab, i) == f) {
 //                        // 如果第一个元素的hash值大于等于0（说明不是在迁移，也不是树）
 //                        // 那就是桶中的元素使用的是链表方式存储
+//                       // TODO至于为什么fh>=0就不是树而是链表，底层的f.hash用的本地方法计算出来的，不知道了
 //                        if (fh >= 0) {
 //                            // 桶中元素个数赋值为1
 //                            binCount = 1;
@@ -325,6 +325,7 @@ public class ConcurrentHashMap<K,V> {
 //                                    // 如果找到了这个元素，则赋值了新值（onlyIfAbsent=false）
 //                                    // 并退出循环
 //                                    oldVal = e.val;
+//                                    // 这里对应着putIfAbsent的话如果，onlyIfAbsent为true，然后有老值就返回老值，无老值就返回null
 //                                    if (!onlyIfAbsent)
 //                                        e.val = value;
 //                                    break;
@@ -339,8 +340,7 @@ public class ConcurrentHashMap<K,V> {
 //                                    break;
 //                                }
 //                            }
-//                        }
-//                        else if (f instanceof TreeBin) {
+//                        } else if (f instanceof TreeBin) {
 //                            // 如果第一个元素是树节点
 //                            Node<K,V> p;
 //                            // 桶中元素个数赋值为2
