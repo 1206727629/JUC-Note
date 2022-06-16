@@ -288,7 +288,7 @@ public class ConcurrentHashMap<K,V> {
             // i是key所在桶的位置
 //            else if ((f = tabAt(tab, i = (n - 1) & hash)) == null) {
 //                // 如果要插入的元素所在的桶还没有元素，则把这个元素插入到这个桶中
-                  // 注意，这里HashMap在多线程环境下，会赋值第一个元素的时候出现元素覆盖的问题，所以ConcurrentHashMap在这里使用了乐观锁保证
+                  // 乐观锁使用地方1：注意，这里HashMap在多线程环境下，会赋值第一个元素的时候出现元素覆盖的问题，所以ConcurrentHashMap在这里使用了乐观锁保证
 //                if (casTabAt(tab, i, null,
 //                        new Node<K,V>(hash, key, value, null)))
 //                    // 如果使用CAS插入元素时，发现已经有元素了，往下走
@@ -387,7 +387,7 @@ public class ConcurrentHashMap<K,V> {
      * CAS 失败，说明其他线程抢先一步把 sizeCtl 改为了 -1。
      * 扩容成功之后会把下一次扩容的阈值赋值给 sc，即 sizeClt。
      *
-     * （1）使用CAS锁控制只有一个线程初始化桶数组；
+     * （1）乐观锁使用地方2：使用CAS锁控制只有一个线程初始化桶数组；
      * （2）sizeCtl在初始化后存储的是扩容门槛；
      * （3）扩容门槛写死的是桶数组大小的0.75倍，桶数组大小即map的容量，也就是最多存储多少个元素。
      * @param m
@@ -460,17 +460,17 @@ public class ConcurrentHashMap<K,V> {
 //        // 并且有一个baseCount，优先更新baseCount，如果失败了再更新不同线程对应的段
 //        // 这样可以保证尽量小的减少冲突
 //
-//        // 先尝试把数量加到baseCount上，如果失败再加到分段的CounterCell上
+//        // 乐观锁使用地方3：先尝试把数量加到baseCount上，如果失败再加到分段的CounterCell上（也就是有线程竞争baseCount了）
           // 成功跳过此if
           // BASECOUNT是baseCount的位移
 //        if ((as = counterCells) != null ||
 //                !U.compareAndSwapLong(this, BASECOUNT, b = baseCount, s = b + x)) {
 //            CounterCell a; long v; int m;
 //            boolean uncontended = true;
-//            // 如果as为空
+//            // 如果as(counterCells)为空
 //            // 或者长度为0
 //            // 或者当前线程所在的段为null
-//            // 或者在当前线程的段上加数量失败
+//            // 乐观锁使用地方4：或者在当前线程的段上加数量失败
 //            if (as == null || (m = as.length - 1) < 0 ||
 //                    (a = as[ThreadLocalRandom.getProbe() & m]) == null ||
 //                    !(uncontended =
@@ -486,6 +486,7 @@ public class ConcurrentHashMap<K,V> {
 //            // 计算元素个数
 //            s = sumCount();
 //        }
+          // 尝试把数量加到baseCount上成功了走下面逻辑
           // 链表长度大于等于0才开始扩容
 //        if (check >= 0) {
 //            Node<K,V>[] tab, nt; int n, sc;
@@ -497,11 +498,11 @@ public class ConcurrentHashMap<K,V> {
 //                int rs = resizeStamp(n);
 //                if (sc < 0) {
 //                    // sc<0说明正在扩容中
-                      // TODO 下面的这个if成立条件不太懂...
+                      //下面的这个if条件就是在判断什么时候结束扩容
                       // (sc >>> RESIZE_STAMP_SHIFT) != rs 这个条件实际上有 bug，在 JDK12 中已经换掉。
-                     // sc == rs + 1 表示最后一个扩容线程正在执行首位工作，也代表扩容即将结束。
+                     // sc == rs + 1 表示最后一个扩容线程正在执行首位工作，也代表扩容结束。
                     // sc == rs + MAX_RESIZERS 表示当前已经达到最大扩容线程数，所以不能继续让线程加入扩容。
-                    // 扩容完成之后会把 nextTable（扩容的新数组） 设为 null。
+                    //  nextTable（扩容的新数组） 如果为 null。
                     // transferIndex <= 0 表示当前可供扩容的下标已经全部分配完毕，也代表了当前线程扩容结束。
 //                    if ((sc >>> RESIZE_STAMP_SHIFT) != rs || sc == rs + 1 ||
 //                            sc == rs + MAX_RESIZERS || (nt = nextTable) == null ||
@@ -519,7 +520,7 @@ public class ConcurrentHashMap<K,V> {
                   // 原因是 sizeCtl 中 -1 这个数值已经被使用了，用来代替当前有线程准备扩容，所以如果直接 +1 是会和标志位发生冲突
                   // 只有初始化第一次记录扩容线程数的时候才需要 +2，后面就都是 +1了
 //                else if (U.compareAndSwapInt(this, SIZECTL, sc,
-//                        (rs << RESIZE_STAMP_SHIFT) + 2))
+//                        (rs << RESIZE_STAMP_SHIFT) + 2))// 乐观锁使用地方7：初始化sc，保证一个线程起初进入扩容
 //                    // 这里是触发扩容的那个线程进入的地方
 //                    // sizeCtl的高16位存储着rs这个扩容邮戳
 //                    // sizeCtl的低16位存储着扩容线程数加1，即(1+nThreads)
@@ -546,15 +547,14 @@ public class ConcurrentHashMap<K,V> {
 //    }
 
     /**
-     * 里面包含了对 CounterCell 数组的初始化和赋值等操作
+     * 注意这里面只包含了对 CounterCell 数组的初始化和赋值等操作
      * (1) CounterCell数组为空，则先进行初始化，默认是一个长度为 2 的数组，然后把当前线程对应的段赋值
-     * (2) 如果再次调用 put 方法，判断了 CounterCell 数组不为空，然后会再次判断数组中的元素是不是为空，因为如果元素为空，就需要初始化一个 CounterCell 对象放到数组；
-     *     而如果元素不为空，则只需要 CAS 操作替换元素中的数量即可
-     * (3) 当前 CounterCell 数组已经初始化完成。当前通过 hash 计算出来的 CounterCell 数组下标中的元素不为 null。
-     *     直接通过 CAS 操作修改 CounterCell 数组中指定下标位置中对象的数量失败，说明有其他线程在竞争修改同一个数组下标中的元素。
-     *     当前操作不满足不允许扩容的条件。当前没有其他线程创建了新的 CounterCell 数组，且当前 CounterCell 数组的大小仍然小于 CPU 数量。两次判断是否相等，相等表示当前没有其他线程扩容CounterCell数组.
-     *     以上条件同时满足的情况下，扩容2倍，迁移数据，直接把前一半的数据迁移过来
-     *
+     * (2) 如果再次调用 put 方法，判断了 CounterCell 数组不为空，然后会再次判断该线程在数组对应的位置是不是为空，如果为空，就需要初始化一个 CounterCell 对象放到数组；
+     *     而如果元素不为空，则只需要 CAS 操作替换元素中的数量即可。两种情况任一完成都会跳出方法
+     * (3) 当前 CounterCell 数组已经初始化完成。当前通过 hash 计算出来的 CounterCell 数组下标中的元素不为 null、并且是
+     *     没有创建新的 CounterCell 数组，且当前 CounterCell 数组的小于 CPU 数量的前提下
+     *     直接通过 CAS 操作修改 CounterCell 数组中指定下标位置中对象的数量失败(说明有其他线程在竞争修改同一个数组下标中的元素)
+     *     则表示需要扩容，扩容2倍，迁移数据，直接把前一半的数据迁移过来
      */
     //    private final void fullAddCount(long x, boolean wasUncontended) {
 //        int h;
@@ -563,22 +563,22 @@ public class ConcurrentHashMap<K,V> {
 //            h = ThreadLocalRandom.getProbe();
 //            wasUncontended = true;
 //        }
-//        boolean collide = false;                // True if last slot nonempty
+//        boolean collide = false;                // 是否需要扩容标识
 //        for (;;) {
 //            CounterCell[] as; CounterCell a; int n; long v;
               // counterCells不为空，则表示初始化了
 //            if ((as = counterCells) != null && (n = as.length) > 0) {
-                  // 获得当前线程所在as中的位置下标
+                  // 获得当前线程所在as中的位置下标，同时counterCells里没有该线程对应的位置
 //                if ((a = as[(n - 1) & h]) == null) {
                       // cellsBusy = 0表示CounterCell没有被操作
 //                    if (cellsBusy == 0) {            // Try to attach new Cell
 //                        CounterCell r = CounterCell(x); // Optimistic create
-                          // cellsBusy由0改为1表示有线程正在操作CounterCell数组
+                          // 乐观锁使用地方5：cellsBusy由0改为1保证只有一个线程正在操作CounterCell数组
 //                        if (cellsBusy == 0 &&
 //                                U.compareAndSwapInt(this, CELLSBUSY, 0, 1)) {
 //                            boolean created = false;
 //                            try {               // Recheck under lock
-                                  // 计算下标，并将CounterCell对象放到CounterCell数组对应下标
+                                  // 计算下标，并将该线程对应的CounterCell对象放到CounterCell数组对应下标
 //                                CounterCell[] rs; int m, j;
 //                                if ((rs = counterCells) != null &&
 //                                        (m = rs.length) > 0 &&
@@ -590,18 +590,18 @@ public class ConcurrentHashMap<K,V> {
 //                                cellsBusy = 0;
 //                            }
 //                            if (created)
-//                                break;
+//                                break; // 成功放入后跳出循环
 //                            continue;           // Slot is now non-empty
 //                        }
 //                    }
-//                    collide = false;
+//                    collide = false; // 有线程操作counterCells数组，collide那么置为false
 //                }
 //                else if (!wasUncontended)       // CAS already known to fail
 //                    wasUncontended = true;      // Continue after rehash
-                  // 如果当前位置的元素不为空，则通过CAS操作加上数量
-//                else if (U.compareAndSwapLong(a, CELLVALUE, v = a.value, v + x))
-//                    break;
-                  // 更新元素值失败，两个不相等代表有其他线程创建了新的CounterCell数组
+                  // 如果当前位置的元素不为空，则通过CAS操作加上数量，并跳出循环
+//                else if (U.compareAndSwapLong(a, CELLVALUE, v = a.value, v + x)) // 乐观锁使用地方6：保证只有一个线程对counterCells所在的位置+x
+//                    break; // 更新成功退出循环
+                  // 更新元素值失败，不相等代表有其他线程创建了新的CounterCell数组
                   // 或者当前CounterCell数组大小已经大于等于CPU数量（保证并发数不会操作CPU数量）
 //                else if (counterCells != as || n >= NCPU)
 //                    collide = false;            // At max size or stale
@@ -609,18 +609,17 @@ public class ConcurrentHashMap<K,V> {
                       // 恢复collide状态，需要对CounterCell数组扩容
 //                    collide = true;
 //                else if (cellsBusy == 0 &&
-//                        U.compareAndSwapInt(this, CELLSBUSY, 0, 1)) {
+//                        U.compareAndSwapInt(this, CELLSBUSY, 0, 1)) { // 乐观锁使用地方6：保证起初只有一个线程扩容
 //                    try {
-                          // 当前 CounterCell 数组已经初始化完成。
-                          // 当前通过 hash 计算出来的 CounterCell 数组下标中的元素不为 null。
-                          // 直接通过 CAS 操作修改 CounterCell 数组中指定下标位置中对象的数量失败，说明有其他线程在竞争修改同一个数组下标中的元素。
-                          // 当前操作不满足不允许扩容的条件。
-                          // 当前没有其他线程创建了新的 CounterCell 数组，且当前 CounterCell 数组的大小仍然小于 CPU 数量。
-                          // 两次判断是否相等，相等表示当前没有其他线程扩容CounterCell数组
+                          // 跳到这里需要满足下列条件：
+                          // 1. 当前 CounterCell 数组已经初始化完成。
+                          // 2. 当前通过 hash 计算出来的 CounterCell 数组下标中的元素不为 null且直接通过 CAS 操作修改 CounterCell 数组中指定下标位置中对象的数量失败，说明有其他线程在竞争修改同一个数组下标中的元素。
+                          // 3. 当前没有其他线程创建新的 CounterCell 数组并且当前 CounterCell 数组的小于 CPU 数量
+                          // 4. 以上条件满足其一，就需要扩容
 //                        if (counterCells == as) {// Expand table unless stale
                               // 扩容大小为扩大2倍
 //                            CounterCell[] rs = new CounterCell[n << 1];
-                              // 迁移数据，直接把前一半的数据迁移过来了
+                              // 5. 迁移数据，直接把前一半的数据迁移过来了
 //                            for (int i = 0; i < n; ++i)
 //                                rs[i] = as[i];
 //                            counterCells = rs;
@@ -698,8 +697,8 @@ public class ConcurrentHashMap<K,V> {
      */
 //    final Node<K,V>[] helpTransfer(Node<K,V>[] tab, Node<K,V> f) {
 //        Node<K,V>[] nextTab; int sc;
-//        // 如果桶数组不为空，并且当前桶第一个元素为ForwardingNode类型，并且nextTab不为空
-//        // 说明当前桶已经迁移完毕了，才去帮忙迁移其它桶的元素
+//        // 如果桶数组不为空，并且当前桶第一个元素为ForwardingNode类型，并且nextTab扩容后的新桶数组不为空
+//        // 说明当前桶已经迁移完毕了，才去帮忙迁移
 //        // 扩容时会把旧桶的第一个元素置为ForwardingNode，并让其nextTab指向新桶数组
 //        if (tab != null && (f instanceof ForwardingNode) &&
 //                (nextTab = ((ForwardingNode<K,V>)f).nextTable) != null) {
@@ -707,11 +706,12 @@ public class ConcurrentHashMap<K,V> {
 //            // sizeCtl<0，说明正在扩容
 //            while (nextTab == nextTable && table == tab &&
 //                    (sc = sizeCtl) < 0) {
+                 // 判断是否达到扩容条件，不达到就退出循环
 //                if ((sc >>> RESIZE_STAMP_SHIFT) != rs || sc == rs + 1 ||
 //                        sc == rs + MAX_RESIZERS || transferIndex <= 0)
 //                    break;
 //                // 扩容线程数加1
-//                if (U.compareAndSwapInt(this, SIZECTL, sc, sc + 1)) {
+//                if (U.compareAndSwapInt(this, SIZECTL, sc, sc + 1)) {// 乐观锁使用地方8：cas设置sc
 //                    // 当前线程帮忙迁移元素
 //                    transfer(tab, nextTab);
 //                    break;
@@ -733,7 +733,7 @@ public class ConcurrentHashMap<K,V> {
      *      ConcurrentHashMap 中采用的是分段扩容法，每个线程负责一段while个人觉得是确定边界
      * （4）迁移时根据hash&n是否等于0把桶中元素分化成两个链表或树；
      * （5）低位链表（树）存储在原来的位置；
-     * （6）高们链表（树）存储在原来的位置加n的位置；
+     * （6）高位链表（树）存储在原来的位置加n的位置；
      * （7）迁移元素时会锁住当前桶，也是分段锁的思想；
      * @param m
      */

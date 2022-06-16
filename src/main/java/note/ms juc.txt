@@ -16,8 +16,8 @@ JUC：
 ！简述线程池原理，FixedThreadPool用的阻塞队列是什么
 
 线程怎么销毁
-如何中断线程，await和sleep区别
-为什么需要多线程，如何理解的（答了充分利用CPU算力，然后问我如何利用，我说阻塞的时候可以切换到其他线程继续执行）
+！如何中断线程，await和sleep区别 见https://www.cnblogs.com/myseries/p/10918819.html
+！为什么需要多线程，如何理解的（答了充分利用CPU算力，然后问我如何利用，我说阻塞的时候可以切换到其他线程继续执行）
 ！如何实现线程同步（答了synchronized，ReentrantLock，CAS。应该再加一个ThreadLocal，还有原子类AtomicInteger）见：https://www.cnblogs.com/xhjt/p/3897440.html
 ！对多线程的理解？（答了看过多线程的源码包括如何实现多线程，继承Thread，实现Runnable，Callable，看了线程池架构的源码，对ThreadPoolExecutor有认识）追问线程池里有哪些重要的成员（corePoolSize，maximumPoolSize，poolSize，ThreadFactory，Blocking Queue，RejectionHandler等。）
 AQS还在哪有使用过？
@@ -26,7 +26,7 @@ AQS还在哪有使用过？
 你怎么理解线程安全，哪些场景会产生线程安全问题，有什么解决办法
 可重入锁reentrantlock（因为上一题提到了concurrenthashmap的segement继承了这个）
 扩展：java中如何查看线程状态，你知道那些java自带的命令
-sleep 和 wait区别
+！sleep 和 wait区别
 线程安全的类有哪些，平时有使用么，用来解决什么问题
 了解哪些并发工具类
 
