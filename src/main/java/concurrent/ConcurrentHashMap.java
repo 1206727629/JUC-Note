@@ -448,7 +448,7 @@ public class ConcurrentHashMap<K,V> {
      * （1）元素个数的存储方式类似于LongAdder类，存储在不同的段上，减少不同线程同时更新size时的冲突；
      * （2）计算元素个数时把这些段的值及baseCount相加算出总的元素个数；
      * （3）若是当前线程的段更新失败或者CounterCell未初始化，数量强制加1
-     * （4）正常情况下sizeCtl存储着扩容门槛，扩容门槛为容量的0.75倍；
+     * （4）正常情况下sizeCtl存储着扩容门槛，扩容门槛为容量的0.75倍；达到扩容门槛后开始扩容
      * （5）扩容时sizeCtl高位存储扩容邮戳(resizeStamp)，低位存储扩容线程数加1（1+nThreads）；
      * （6）其它线程添加元素后如果发现存在扩容，也会加入的扩容行列中来；
      * @param m
@@ -470,7 +470,7 @@ public class ConcurrentHashMap<K,V> {
 //            // 如果as(counterCells)为空
 //            // 或者长度为0
 //            // 或者当前线程所在的段为null
-//            // 乐观锁使用地方4：或者在当前线程的段上加数量失败
+//            // 乐观锁使用地方4：或者在当前线程的段上加数量失败，也就是有线程竞争
 //            if (as == null || (m = as.length - 1) < 0 ||
 //                    (a = as[ThreadLocalRandom.getProbe() & m]) == null ||
 //                    !(uncontended =
@@ -573,7 +573,7 @@ public class ConcurrentHashMap<K,V> {
                       // cellsBusy = 0表示CounterCell没有被操作
 //                    if (cellsBusy == 0) {            // Try to attach new Cell
 //                        CounterCell r = CounterCell(x); // Optimistic create
-                          // 乐观锁使用地方5：cellsBusy由0改为1保证只有一个线程正在操作CounterCell数组
+                          // 乐观锁使用地方5：cellsBusy由0改为1保证只有一个线程正在操作CounterCell数组，添加第一个元素
 //                        if (cellsBusy == 0 &&
 //                                U.compareAndSwapInt(this, CELLSBUSY, 0, 1)) {
 //                            boolean created = false;
@@ -711,7 +711,7 @@ public class ConcurrentHashMap<K,V> {
 //                        sc == rs + MAX_RESIZERS || transferIndex <= 0)
 //                    break;
 //                // 扩容线程数加1
-//                if (U.compareAndSwapInt(this, SIZECTL, sc, sc + 1)) {// 乐观锁使用地方8：cas设置sc
+//                if (U.compareAndSwapInt(this, SIZECTL, sc, sc + 1)) {// 乐观锁使用地方8：cas设置扩容线程数
 //                    // 当前线程帮忙迁移元素
 //                    transfer(tab, nextTab);
 //                    break;
@@ -730,7 +730,7 @@ public class ConcurrentHashMap<K,V> {
      *      当前桶中的元素迁移完成后，旧数组就在数组中放置一个ForwardingNode。读操作或者迭代读时碰到ForwardingNode时，
      *      将操作转发到扩容后的新的table数组上去执行，写操作碰见它时，则尝试帮助扩容
      *
-     *      ConcurrentHashMap 中采用的是分段扩容法，每个线程负责一段while个人觉得是确定边界
+     *      ConcurrentHashMap 中采用的是分段扩容法，每个线程负责一段
      * （4）迁移时根据hash&n是否等于0把桶中元素分化成两个链表或树；
      * （5）低位链表（树）存储在原来的位置；
      * （6）高位链表（树）存储在原来的位置加n的位置；

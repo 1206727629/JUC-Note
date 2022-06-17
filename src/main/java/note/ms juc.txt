@@ -30,12 +30,6 @@ AQS还在哪有使用过？
 线程安全的类有哪些，平时有使用么，用来解决什么问题
 了解哪些并发工具类
 
-说一下Java 中的锁是怎么实现的
-Java有哪些锁？Synchronized原理？ Synchronized 为什么要进行锁膨胀？ReentrantLock 原理？
-Lock的加锁 和解锁 过程 和公平锁 和非公平锁实现原理
-Conditional 源码有没有看过
-阻塞队列 源码有没有看过
-
 while(true)里面一直new thread().start()会有什么问题
 volatile作用，原理，怎么保证可见性的，内存屏障
 3.什么场景下，都用过哪些并发？你用多线程的时候 Synchrionzed和ReentranLock怎么选择的？选择原则是什么？
@@ -47,6 +41,11 @@ threadlocal用过么，原理是什么。
 ThreadLocal，原理以及使用的有什么注意的地方(内存泄漏)
 threadlocal用过么，什么场景下使用的，原理，hash冲突怎么办，扩容实现，会有线程安全问题么，内存泄漏产生原因，怎么解决
 
+说一下Java 中的锁是怎么实现的
+Java有哪些锁？Synchronized原理？ Synchronized 为什么要进行锁膨胀？ReentrantLock 原理？
+Lock的加锁 和解锁 过程 和公平锁 和非公平锁实现原理
+Conditional 源码有没有看过
+阻塞队列 源码有没有看过
 reentrantlock的实现原理，加锁和释放锁的一个过程，aqs，公平和非公平，可重入，可中断怎么实现的
 synchronized是可重入锁吗（因为1.8的时候我提到了synchronized的锁升级）
 volatile关键字，他是如何保证可见性，有序性
@@ -61,17 +60,17 @@ JUC包，CopyOnWriteArrayList是什么
 
 什么情况下产生死锁，怎么排查，怎么解决
 
-ConcurrentHashMap与HashMap的数据结构是否一样？
-HashMap在多线程环境下何时会出现并发安全问题？
-ConcurrentHashMap为什么是线程安全的？
-ConcurrentHashMap原理，put，get，size，扩容，怎么保证线程安全的，1.7和1.8的区别，为什么用synchronized，分段锁有什么问题，hash算法做了哪些优化
-ConcurrentHashMap为什么key和value不能为null
+！ConcurrentHashMap与HashMap的数据结构是否一样？
+！HashMap在多线程环境下何时会出现并发安全问题？
+！ConcurrentHashMap为什么是线程安全的？
+！ConcurrentHashMap原理，put，get，size，扩容，怎么保证线程安全的，1.7和1.8的区别，为什么用synchronized，分段锁有什么问题，hash算法做了哪些优化
+！ConcurrentHashMap为什么key和value不能为null（二义性）
 HashMap,ConcurrentHashMap,hashtable各自的特点区别。 jdk1.8都做了哪些改进？
-ConcurrentHashMap，1.7和1.8的区别
-讲讲ConcurrentHashMap如何实现并发 扩容呢
-那Map呢，Java里Map的多线程实现类，是什么，讲一下它的实现原理（答ConcurrentHashMap，讲了1.7用分段锁，数据均匀分布到Segments数组上。而1.8放弃了分段锁，使用和HashMap一样的哈希数组，但因为多线程环境下，全局变量都设置成了volatile防指令重排，还有nextTable也成为了全局volatile变量等等的，现在回想忘记说sizeCtl变量了。然后说底层主要使用了synchronized跟cas操作，现在回想应该再补充一下synchronized的锁升级，所以升级到1.8直接使用了synchronized。但当时这道题已经答了很多了，我看差不多得了，就没继续说了，打算如果追问的话再说。）
-ConcurrentHashMap是否是强一致性的？
-ConcurrentHashMap不能解决哪些问题？
+！ConcurrentHashMap，1.7和1.8的区别
+！讲讲ConcurrentHashMap如何实现并发 扩容呢
+！那Map呢，Java里Map的多线程实现类，是什么，讲一下它的实现原理（答ConcurrentHashMap，讲了1.7用分段锁，数据均匀分布到Segments数组上。而1.8放弃了分段锁，使用和HashMap一样的哈希数组，但因为多线程环境下，全局变量都设置成了volatile防指令重排，还有nextTable也成为了全局volatile变量等等的，现在回想忘记说sizeCtl变量了。然后说底层主要使用了synchronized跟cas操作，现在回想应该再补充一下synchronized的锁升级，所以升级到1.8直接使用了synchronized。但当时这道题已经答了很多了，我看差不多得了，就没继续说了，打算如果追问的话再说。）
+！ConcurrentHashMap是否是强一致性的？
+！ConcurrentHashMap不能解决哪些问题？
 
 手撕模拟多线程实现银行转帐（未同步与同步）；
 
