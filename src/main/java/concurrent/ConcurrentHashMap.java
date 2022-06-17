@@ -726,7 +726,7 @@ public class ConcurrentHashMap<K,V> {
      *  分段扩容法，即每个线程负责一段
      * （1）新桶数组大小是旧桶数组的两倍；
      * （2）迁移元素先从靠后的桶开始；
-     * （3）迁移完成的桶在里面放置一ForwardingNode类型的元素，标记该桶迁移完成；
+     * （3）迁移完成的桶在里面放置一ForwardingNode类型的元素，标记该桶迁移完成，也指向了nextTab新桶数组；
      *      当前桶中的元素迁移完成后，旧数组就在数组中放置一个ForwardingNode。读操作或者迭代读时碰到ForwardingNode时，
      *      将操作转发到扩容后的新的table数组上去执行，写操作碰见它时，则尝试帮助扩容
      *
@@ -739,7 +739,7 @@ public class ConcurrentHashMap<K,V> {
      */
 //    private final void transfer(Node<K,V>[] tab, Node<K,V>[] nextTab) {
 //        int n = tab.length, stride;
-          // 如果n/8在除以NCPU得到的数小于16，则只会有一个线程扩容
+          // 非单核应用如果n/8在除以NCPU得到的数小于16，则只会有一个线程扩容
 //        if ((stride = (NCPU > 1) ? (n >>> 3) / NCPU : n) < MIN_TRANSFER_STRIDE)
              // 默认每个线程最低位数为16
 //            stride = MIN_TRANSFER_STRIDE; // subdivide range
@@ -781,7 +781,7 @@ public class ConcurrentHashMap<K,V> {
 //                else if (U.compareAndSwapInt
 //                        (this, TRANSFERINDEX, nextIndex,
 //                                nextBound = (nextIndex > stride ?
-//                                        nextIndex - stride : 0))) {
+//                                        nextIndex - stride : 0))) { // 乐观锁使用地方9：使用TRANSFERINDEX控制每一个线程确认当前的槽位
 //                    bound = nextBound;
 //                    i = nextIndex - 1;
 //                    advance = false;
@@ -800,7 +800,7 @@ public class ConcurrentHashMap<K,V> {
 //                    sizeCtl = (n << 1) - (n >>> 1);
 //                    return;
 //                }
-//                if (U.compareAndSwapInt(this, SIZECTL, sc = sizeCtl, sc - 1)) {
+//                if (U.compareAndSwapInt(this, SIZECTL, sc = sizeCtl, sc - 1)) { // 乐观锁使用地方10：扩容完成后，扩容线程数-1
 //                    // 当前线程扩容完成，把扩容线程数-1
 //                    if ((sc - 2) != resizeStamp(n) << RESIZE_STAMP_SHIFT)
 //                        // 扩容完成两边肯定相等
@@ -818,7 +818,7 @@ public class ConcurrentHashMap<K,V> {
               // 旧数组就在数组中放置一个ForwardingNode。读操作或者迭代读时碰到ForwardingNode时，将操作转发到扩容后的新的table数组上去执行，写操作碰见它时，则尝试帮助扩容
 //            else if ((f = tabAt(tab, i)) == null)
 //                // 如果桶中无数据，直接放入ForwardingNode标记该桶已迁移
-//                advance = casTabAt(tab, i, null, fwd);
+//                advance = casTabAt(tab, i, null, fwd); // 乐观锁使用地方11：不同的线程一直扩容迁移数据，如果发现key对应的桶种无数据，直接放入ForwardingNode标记该桶已迁移
 //            else if ((fh = f.hash) == MOVED)
 //                // 如果桶中第一个元素的hash值为MOVED
 //                // 说明它是ForwardingNode节点
@@ -830,12 +830,12 @@ public class ConcurrentHashMap<K,V> {
 //                    // 再次判断当前桶第一个元素是否有修改
 //                    // 也就是可能其它线程先一步迁移了元素
 //                    if (tabAt(tab, i) == f) {
-//                        // 把一个链表分化成两个链表
-//                        // 规则是桶中各元素的hash与桶大小n进行与操作
-//                        // 等于0的放到低位链表(low)中，不等于0的放到高位链表(high)中
-//                        // 其中低位链表迁移到新桶中的位置相对旧桶不变
-//                        // 高位链表迁移到新桶中位置正好是其在旧桶的位置加n
-//                        // 这也正是为什么扩容时容量在变成两倍的原因
+//                        // 1. 把一个链表分化成两个链表
+//                        // 2. 规则是桶中各元素的hash与桶大小n进行与操作
+//                        // 3. 等于0的放到低位链表(low)中，不等于0的放到高位链表(high)中
+//                        // 4. 其中低位链表迁移到新桶中的位置相对旧桶不变
+//                        // 5. 高位链表迁移到新桶中位置正好是其在旧桶的位置加n
+//                        // 6. 这也正是为什么扩容时容量在变成两倍的原因
 //                        Node<K,V> ln, hn;
 //                        if (fh >= 0) {
 //                            // 第一个元素的hash值大于等于0
