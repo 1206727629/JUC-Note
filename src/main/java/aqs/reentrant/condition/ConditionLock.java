@@ -54,12 +54,33 @@ public class ConditionLock {
         // ReentrantLock.Sync.newCondition()
         // 条件锁中也维护了一个队列，为了和AQS的队列区分，我这里称为条件队列，
         // firstWaiter是队列的头节点，lastWaiter是队列的尾节点
+
         // AQS的队列头节点firstWaiter是不存在任何值的，是一个虚节点；
         // Condition的队列头节点是存储着实实在在的元素值的，是真实节点。
+
+        // AQS中下一个节点是next，上一个节点是prev；
         // Condition中下一个节点是nextWaiter，没有上一个节点
         final ConditionObject newCondition() {
             return new ConditionObject();
         }
+
+        protected final boolean isHeldExclusively() {
+            // While we must in general read state before owner,
+            // we don't need to do so to check if current thread is owner
+            return getExclusiveOwnerThread() == Thread.currentThread();
+        }
+
+        // ConditionObject属于AQS内部类
+        // 可以看到条件锁中也维护了一个队列，为了和AQS的队列区分，我这里称为条件队列，firstWaiter是队列的头节点，lastWaiter是队列的尾节点
+//        public class ConditionObject implements Condition, java.io.Serializable {
+//            /** First node of condition queue. */
+//            private transient Node firstWaiter;
+//            /** Last node of condition queue. */
+//            private transient Node lastWaiter;
+        // AbstractQueuedSynchronizer.ConditionObject.ConditionObject()
+//        public ConditionObject() { }
+//        }
+
     }
 
     static final class NonfairSync extends Sync {
@@ -73,10 +94,12 @@ public class ConditionLock {
     /**
      * 条件锁阻塞的逻辑
      *
-     * （1）新建一个节点加入到条件队列中去；
-     * （2）完全释放当前线程占有的锁；
-     * （3）阻塞当前线程，并等待条件的出现；
-     * （4）条件已出现（此时节点已经移到AQS的队列中），尝试获取锁；
+     * （1）如果线程中断了，抛出异常
+     * （2）新建一个节点加入到条件队列中去；
+     * （3）完全释放当前线程占有的锁；
+     * （4）阻塞当前线程，并等待条件的出现；
+     * （5）条件已出现（此时节点已经移到AQS的队列中），尝试获取锁；
+     * （6）有可能清除条件队列中节点状态waitStatus不是Node.CONDITION（取消状态）的节点并且看是否抛出异常或者给自己设置中断标识
      * 也就是说await()方法内部其实是先释放锁->等待条件->再次获取锁的过程
      */
     // AbstractQueuedSynchronizer.ConditionObject.await()
@@ -97,26 +120,30 @@ public class ConditionLock {
 //
 //            // 上面部分是调用await()时释放自己占有的锁，并阻塞自己等待条件的出现
 //            // *************************分界线*************************  //
-//            // 下面部分是条件已经出现，尝试去获取锁
+//            // 下面部分是条件已经出现，线程中断跳出while循环
 //
 //            if ((interruptMode = checkInterruptWhileWaiting(node)) != 0)
 //                break;
 //        }
-//        // 在同步队列的话，也会走下面的逻辑
+//        // 在同步队列的话，会走下面的逻辑
 //        // 尝试获取锁，注意第二个参数，这是上一章分析过的方法
 //        // 如果没获取到会再次阻塞（这个方法这里就不贴出来了，有兴趣的翻翻上一章的内容）
 //        if (acquireQueued(node, savedState) && interruptMode != THROW_IE)
 //            interruptMode = REINTERRUPT;
-//        // 清除取消的节点
+//        // 清除条件队列中节点状态waitStatus不是Node.CONDITION（取消状态）的节点
 //        if (node.nextWaiter != null) // clean up if cancelled
 //            unlinkCancelledWaiters();
-//        // 线程中断相关
+//        // 线程中断，看是否抛出异常或者给自己设置中断标识
 //        if (interruptMode != 0)
 //            reportInterruptAfterWait(interruptMode);
 //    }
 
     /**
      * 添加新节点至条件队列，这里也是懒加载方式
+     *
+     * 1. 如果当前尾节点的状态不是Node.CONDITION，调用unlinkCancelledWaiters方法清除条件队列中状态不是Node.CONDITION（取消状态）的节点
+     * 2. 首先，在条件队列中，新建节点的初始等待状态是CONDITION（-2）；
+     * 3. 尾插法插入并返回新节点
      *
      * 首先，在条件队列中，新建节点的初始等待状态是CONDITION（-2）；
      * 其次，移到AQS的队列中时等待状态会更改为0（AQS队列节点的初始等待状态为0）；
@@ -149,7 +176,30 @@ public class ConditionLock {
 //    }
 
     /**
-     * 一次性释放所有获得的锁
+     * 清除条件队列中状态不是Node.CONDITION（取消状态）的节点
+     */
+//    private void unlinkCancelledWaiters() {
+//        AbstractQueuedSynchronizer.Node t = firstWaiter;
+//        AbstractQueuedSynchronizer.Node trail = null;
+//        while (t != null) {
+//            AbstractQueuedSynchronizer.Node next = t.nextWaiter;
+//            if (t.waitStatus != AbstractQueuedSynchronizer.Node.CONDITION) {
+//                t.nextWaiter = null;
+//                if (trail == null)
+//                    firstWaiter = next;
+//                else
+//                    trail.nextWaiter = next;
+//                if (next == null)
+//                    lastWaiter = trail;
+//            }
+//            else
+//                trail = t;
+//            t = next;
+//        }
+//    }
+
+    /**
+     * 一次性释放所有获得的锁，返回获取锁的次数
      */
     // AbstractQueuedSynchronizer.fullyRelease
 //    final int fullyRelease(Node node) {
@@ -173,7 +223,20 @@ public class ConditionLock {
 //    }
 
     /**
-     * 看此节点是否在AQS的等待队列中
+     * 尝试释放锁并唤醒下一个节点
+     */
+//    public final boolean release(int arg) {
+//        if (tryRelease(arg)) {
+//            Node h = head;
+//            if (h != null && h.waitStatus != 0)
+//                unparkSuccessor(h);
+//            return true;
+//        }
+//        return false;
+//    }
+
+    /**
+     * 看此节点是否在AQS的同步队列中
      */
     // AbstractQueuedSynchronizer.isOnSyncQueue
 //    final boolean isOnSyncQueue(Node node) {
@@ -189,11 +252,27 @@ public class ConditionLock {
 //    }
 
     /**
+     * 从尾结点向前遍历看是否node节点在同步队列
+     */
+//    private boolean findNodeFromTail(Node node) {
+//        Node t = tail;
+//        for (;;) {
+//            if (t == node)
+//                return true;
+//            if (t == null)
+//                return false;
+//            t = t.prev;
+//        }
+//    }
+
+    /**
      *  signal()方法的大致流程为：
      * （1）从条件队列的头节点开始寻找一个非取消状态的节点；
      * （2）把它从条件队列移到AQS队列；
      * （3）且只移动一个节点；
      *
+     * 1. 如果不是当前线程占有着锁，调用这个方法抛出异常
+     * 2. 从条件队列中移除的节点尝试加入至同步队列中
      * 注意，这里调用signal()方法后并不会真正唤醒一个节点，那么，唤醒一个节点是在signal()方法后，最终会执行lock.unlock()方法，
      * 此时才会真正唤醒一个节点，唤醒的这个节点如果曾经是条件节点的话又会继续执行await()方法“分界线”下面的代码。
      */
@@ -211,8 +290,10 @@ public class ConditionLock {
 //    }
 
     /**
-     * 把节点从条件队列中移除
-     * 并且把节点移动到AQS队列中
+     * 1. 把节点从条件队列中移除
+     * 2. 并且尝试把条件队列中移除的节点移动到同步队列中
+     * 3. 若是这节点已经取消，transferForSignal直接返回false，重复1、2步骤
+     * 4. 若是这节点添加至同步队列成功，则跳出方法
      */
     // AbstractQueuedSynchronizer.ConditionObject.doSignal
 //    private void doSignal(Node first) {
@@ -229,7 +310,7 @@ public class ConditionLock {
 
     /**
      * 把条件队列中的节点放到等待队列中
-     * 若是这节点已经取消，直接返回false，并新从条件队列中的节点放到等待队列中
+     * 1. 若是这节点已经取消，直接返回false
      * 若是没有取消，尝试将上一个节点的0更改为-1，若是上一个节点已取消了，或者更新状态为SIGNAL失败（也是说明上一个节点已经取消了）则唤醒当前线程
      * 若是尝试成功，返回true跳出循环
      */

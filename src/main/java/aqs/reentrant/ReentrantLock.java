@@ -35,7 +35,6 @@ public class ReentrantLock {
     public boolean tryLock() {
         // 这里公平锁的具体实现在FairSync中，
         // 非公平锁的实现在Sync.nonfairTryAcquire中
-        // return false;凑编译过去硬凑的
         return sync.nonfairTryAcquire(1);
     }
 
@@ -102,6 +101,8 @@ public class ReentrantLock {
 
         /**
          * 公平锁和非公平锁底层全都使用此方法解锁
+         * 1. state值减一，并设置状态变量的值
+         * 2. 如果state为0清空占有线程exclusiveOwnerThread
          * @param releases
          * @return
          */
@@ -130,11 +131,8 @@ public class ReentrantLock {
 
     /**
      * NonfairSync实现了Sync，主要用于非公平锁的获取
-     *
      * 相对于公平锁，非公平锁加锁的过程主要有两点不同：
-     *
      * （1）一开始就尝试CAS更新状态变量state的值，如果成功了就获取到锁了；
-     *
      * （2）在tryAcquire()的时候没有检查是否前面有排队的线程，直接上去获取锁才不管别人有没有排队呢；
      */
     static final class NonfairSync extends Sync {
@@ -165,7 +163,7 @@ public class ReentrantLock {
      * ReentrantLock#lock()
      * ->ReentrantLock.FairSync#lock() // 公平模式获取锁
      *   ->AbstractQueuedSynchronizer#acquire() // AQS的获取锁方法
-     *     ->ReentrantLock.FairSync#tryAcquire() // 尝试获取锁
+     *     ->ReentrantLock.FairSync#tryAcquire() // 尝试获取锁，此方法是自己实现的
      *     ->AbstractQueuedSynchronizer#addWaiter()  // 添加到队列
      * 	  ->AbstractQueuedSynchronizer#enq()  // 入队
      *     ->AbstractQueuedSynchronizer#acquireQueued() // 里面有个for()循环，唤醒后再次尝试获取锁
@@ -184,9 +182,15 @@ public class ReentrantLock {
 
         /**
          * lock中的直接调用acquire
+         * 1. 先判断是否获锁成功，注意这里基于模板方法模式，公平锁与非公平锁不一样
+         * 2. 获锁成功跳出
+         * 3. 获锁失败，进入同步队列
+         * 4. 同步队列种的每个节点尝试获取锁，前提是自己的前驱节点是head才有可能获得锁
+         * 5. 获得锁后更新同步队列节点，使自己变为头节点
+         * 6. acquireQueued返回的是同步队列中线程的中断标识位
          */
         // AbstractQueuedSynchronizer.acquire()
-        // TODO 这是要看的哈~
+        // TODO 这里是从AbstractQueuedSynchronizer粘贴过来的，这是要看的哈~
 //        public final void acquire(int arg) {
 //            // 尝试获取锁
 //            // 如果失败了，就排队
@@ -194,7 +198,7 @@ public class ReentrantLock {
 //                    // 注意addWaiter()为排队，addWaiter()这里传入的节点模式为独占模式
                         // 如果获锁成功，acquireQueued返回中断位为false
 //                    acquireQueued(addWaiter(Node.EXCLUSIVE), arg)) {
-//                selfInterrupt();
+//                selfInterrupt(); // 中断
 //            }
 //        }
 
@@ -206,7 +210,7 @@ public class ReentrantLock {
          * @return
          */
         @Override
-        // ReentrantLock.FairSync.tryAcquire()
+        // ReentrantLock.FairSync.tryAcquire()，tryAcquire()方法需要重写
         protected final boolean tryAcquire(int acquires) {
             // 当前线程
             final Thread current = Thread.currentThread();
@@ -220,7 +224,7 @@ public class ReentrantLock {
                 if (!hasQueuedPredecessors() &&
                         compareAndSetState(0, acquires)) {
                     // 当前线程获取了锁，把自己设置到exclusiveOwnerThread变量中
-                    // exclusiveOwnerThread是AQS的父类AbstractOwnableSynchronizer中提供的变量
+                    // exclusiveOwnerThread是AQS的父类AbstractOwnableSynchronizer（AQS继承于它）中提供的变量
                     setExclusiveOwnerThread(current);
                     // 返回true说明成功获取了锁
                     return true;
@@ -251,6 +255,8 @@ public class ReentrantLock {
 
     /**
      * tryAcquireNanos调用doAcquireNanos
+     * 1. 如果线程中断了，抛出异常
+     * 2. 先尝试获取一次锁
      */
     // AbstractQueuedSynchronizer.tryAcquireNanos()
 //        public final boolean tryAcquireNanos(int arg, long nanosTimeout)
@@ -264,7 +270,9 @@ public class ReentrantLock {
 //        }
 
     /**
-     *在阻塞的时候加上阻塞时间，并且会随时检查是否到期，只要到期了没获取到锁就返回false。
+     * 也是先尝试获取锁，获取锁失败加入同步队列，然后尝试获取锁
+     * 只不过相比未有超时时间的tryLock相比，在阻塞的时候加上阻塞时间，并且会随时检查是否到期，只要到期了没获取到锁就返回false
+     * 同时也会有可能中断异常抛出
      */
     // AbstractQueuedSynchronizer.doAcquireNanos()
 //    private boolean doAcquireNanos(int arg, long nanosTimeout)
@@ -308,6 +316,9 @@ public class ReentrantLock {
 
     /**
      * 将获取锁失败的线程放入等待队列中
+     * 1. 为当前节点创建新Node节点
+     * 2. 如果尾结点不为空，尾插法，并返回新建Node节点
+     * 3. 如果尾节点为空，调用enq方法
      */
     // AbstractQueuedSynchronizer.addWaiter()
     // 调用这个方法，说明上面尝试获取锁失败了
@@ -337,8 +348,8 @@ public class ReentrantLock {
 //        }
 
     /**
-     * 懒加载等待队列的头尾节点，起初两者都指向哨兵节点
-     * 不是初始化，则把新节点添加到队列尾部
+     * 1. 懒加载等待队列的头尾节点，注意头节点算是哨兵节点，不存任何值，最开始头尾指针指向这哨兵节点
+     * 2. 初始化完成后或已经初始化则尾插法，返回node
      */
     // AbstractQueuedSynchronizer.enq()
 //        private Node enq(final Node node) {
@@ -366,8 +377,10 @@ public class ReentrantLock {
 //        }
 
     /**
-     * 等待队列中的每一个节点都尝试去获取锁
-     * 获取锁失败被阻塞；被唤醒继续尝试获取锁
+     * 1. 等待队列中的每一个节点都尝试去获取锁
+     * 2. 获取锁失败，通过shouldParkAfterFailedAcquire判断是否阻塞线程
+     * 3. 判断是需要阻塞（即waitStatus属性为Node.SIGNAL），则调用LockSupport.park阻塞线程，并返回该线程是否需要中断标识位
+     * 3. 若是节点不需要被阻塞（即waitStatus属性不是Node.SIGNAL），则继续尝试获取锁
      */
     // AbstractQueuedSynchronizer.acquireQueued()
     // 调用上面的addWaiter()方法使得新节点已经成功入队了
@@ -426,6 +439,7 @@ public class ReentrantLock {
 //            //static final int SIGNAL    = -1;
 //            //static final int CONDITION = -2;
 //            //static final int PROPAGATE = -3;
+
 //            int ws = pred.waitStatus;
 //            // 如果等待状态为SIGNAL(等待唤醒)，直接返回true
 //            if (ws == Node.SIGNAL)
@@ -438,7 +452,7 @@ public class ReentrantLock {
 //                } while (pred.waitStatus > 0);
 //                pred.next = node;
 //            } else {
-//                // 如果前一个节点的状态小于等于0，则把其状态设置为等待唤醒
+//                // 如果前一个节点的状态小于等于0且不等于-1，则把其状态设置为等待唤醒
 //                // 这里可以简单地理解为把初始状态0设置为SIGNAL
 //                // CONDITION是条件锁的时候使用的
 //                // PROPAGATE是共享锁使用的
@@ -483,6 +497,8 @@ public class ReentrantLock {
 
     /**
      * 唤醒节点
+     * 1. 如果头节点的等待状态小于0，就把它设置为0
+     * 2. 从尾节点向前遍历取到队列最前面的那个状态不是已取消状态的节点并唤醒它
      */
 //    private void unparkSuccessor(Node node) {
 //        // 注意，这里的node是头节点
