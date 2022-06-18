@@ -35,8 +35,8 @@ public class ReentrantLock {
     public boolean tryLock() {
         // 这里公平锁的具体实现在FairSync中，
         // 非公平锁的实现在Sync.nonfairTryAcquire中
-//        return sync.tryAcquire(1);
-        return false;
+        // return false;凑编译过去硬凑的
+        return sync.nonfairTryAcquire(1);
     }
 
     // java.util.concurrent.locks.ReentrantLock.unlock()
