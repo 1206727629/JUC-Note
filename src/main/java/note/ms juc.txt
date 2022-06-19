@@ -29,17 +29,17 @@ AQS还在哪有使用过？
 线程安全的类有哪些，平时有使用么，用来解决什么问题
 了解哪些并发工具类
 
-Java有哪些锁？Synchronized原理？ Synchronized 为什么要进行锁膨胀？
-synchronized是可重入锁吗（因为1.8的时候我提到了synchronized的锁升级）
+！Java有哪些锁？Synchronized原理？ Synchronized 为什么要进行锁膨胀？
+！synchronized是可重入锁吗（因为1.8的时候我提到了synchronized的锁升级）
 while(true)里面一直new thread().start()会有什么问题
-volatile作用，原理，怎么保证可见性的，内存屏障
-3.什么场景下，都用过哪些并发？你用多线程的时候 Synchrionzed和ReentranLock怎么选择的？选择原则是什么？
+！volatile作用，原理，怎么保证可见性的，内存屏障
+！3.什么场景下，都用过哪些并发？你用多线程的时候 Synchrionzed和ReentranLock怎么选择的？选择原则是什么？
 volatile和transient关键字
-单核cpu用volatile有用吗
-锁升级过程，轻量锁可以变成偏向锁么，偏向锁可以变成无锁么，自旋锁，对象头结构，锁状态变化过程
-Synchronized   1.8后左了那些优化
-volatile 关键字原理
-volatile关键字，他是如何保证可见性，有序性
+！单核cpu用volatile有用吗
+！锁升级过程，轻量锁可以变成偏向锁么，偏向锁可以变成无锁么，自旋锁，对象头结构，锁状态变化过程
+！Synchronized   1.8后作了那些优化
+！volatile 关键字原理
+！volatile关键字，他是如何保证可见性，有序性
 
 ！ThreadLocal用过么，原理是什么。
 强引用、软引用、弱引用、虚引用有什么区别。
