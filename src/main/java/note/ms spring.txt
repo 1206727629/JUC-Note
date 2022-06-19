@@ -39,7 +39,6 @@ ORM用的什么？Mybatis和hibernates的区别？你觉得谁更好用呢？
 mybatis怎么从一个mapper组装成一个类
 Mybatis一级缓存二级缓存的区别
 Mybatis的延迟加载 一二级缓存 $&[的区别
-Mybatis的延迟加载 一二级缓存 $&[的区别
 MyBatis 的接口和mapper怎么对应执行？
 Mybatis 的 ${} #{}的区别是什么
 Mybatis什么情况下会sql注入呢
