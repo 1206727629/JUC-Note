@@ -150,7 +150,6 @@ SpringBoot相比Spring的优势（配置简单，去XML，代码简洁，便于�
 SpringMVC里的MVC是什么意思？（答了MVC设计模式，说了model，view，controller的解耦思想）追问我有没有看过SpringMVC的源码（我说没有，但我知道它的底层原理是通过DispatcherServlet去处理页面映射，数据格式的处理等等）
 MyBatis项目启动之后，数据库发生了修改，这时候应该怎么办？（我说修改Mapper）追问如何修改，我说不会，面试官说这部分是热部署相关，要去了解一下～
 spring aop的原理。cglib和jdk动态代理的原理，有什么区别。为什么jdk动态代理不继承类。
-spring aop的原理。cglib和jdk动态代理的原理，有什么区别。为什么jdk动态代理不继承类
 Spring用了哪些设计模式。
 分布式锁的实现。
 分布式session存储解决方案。
