@@ -1,11 +1,13 @@
 Spring和MyBatis:
 
 Spring 事务注解原理，事务传播机制，使用过什么传播机制？
-问循环注入，怎么解决
-spring生命周期，几种scope区别，aop实现有哪几种实现，接口代理和类代理会有什么区别
+！问循环注入，怎么解决 见：https://segmentfault.com/a/1190000039091691
+！带有@Transactional和@Async的循环依赖问题 见：https://blog.csdn.net/luoyang_java/article/details/105835112
+！Spring Bean 循环依赖为什么需要三级缓存 见：https://www.cnblogs.com/asker009/p/14376955.html
+！spring生命周期，几种scope区别，aop实现有哪几种实现，接口代理和类代理会有什么区别
 Spring用了哪些设计模式
-Bean的几种初始化方式 默认方式
-Aop怎么实现的 有aop不生效的情况吗（独立事务不对）
+！Bean的几种初始化方式 默认方式
+！Aop怎么实现的 有aop不生效的情况吗（独立事务不对）
 spring源码分析怎么解决三级缓存
 
 ！Ioc和AOP简单讲下
@@ -13,9 +15,9 @@ spring源码分析怎么解决三级缓存
 区别：1）静态代理：由程序员创建或是由特定工具生成，在代码编译时就确定了被代理的类是哪 一个是静态代理。静态代理通常只代理一个类；
 2）动态代理：在代码运行期间，运用反射机制动态创建生成。动态代理代理的是一个接口 下的多个实现类；
 实现步骤：a.实现InvocationHandler接口创建自己的调用处理器；b.给Proxy类提供ClassLoader和代理接口类型数组创建动态代理类；c.利用反射机制得到动态代理类的构造函 数；d.利用动态代理类的构造函数创建动态代理类对象；
-Spring中的ioc和aop，ioc的注解有哪些，autowired和resource有什么区别，作用域有哪些，autowired如何配置两个类中的一个
+！Spring中的ioc和aop，ioc的注解有哪些，autowired和resource有什么区别，作用域有哪些，autowired如何配置两个类中的一个
 ！为什么jdk动态代理不继承类，jdk动态代理，cglib区别，优缺点，怎么实现方法的调用的 见：https://www.cnblogs.com/zjfjava/p/13919437.html及尚硅谷视频讲解
-spring aop解决什么问题，实现原理，
+！spring aop解决什么问题，实现原理，
 
 ！springboot的启动流程
 ！@springbootapplication注解原理有了解吗？(这个没答上来, 只知道是几个注解的合体, 有赞特别喜欢深挖源码)
