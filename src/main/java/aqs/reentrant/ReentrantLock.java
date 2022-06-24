@@ -379,7 +379,8 @@ public class ReentrantLock {
      * 1. 等待队列中的每一个节点都尝试去获取锁
      * 2. 获取锁失败，通过shouldParkAfterFailedAcquire判断是否阻塞线程
      * 3. 判断是需要阻塞（即waitStatus属性为Node.SIGNAL），则调用LockSupport.park阻塞线程，并返回该线程是否需要中断标识位
-     * 3. 若是节点不需要被阻塞（即waitStatus属性不是Node.SIGNAL），则继续尝试获取锁
+     * 4. 若是节点不需要被阻塞（即waitStatus属性不是Node.SIGNAL），则继续尝试获取锁
+     * 5. 若是被唤醒，且前一个节点是头结点，则尝试获取锁。获取锁成功设置自己为头结点
      */
     // AbstractQueuedSynchronizer.acquireQueued()
     // 调用上面的addWaiter()方法使得新节点已经成功入队了
@@ -462,7 +463,7 @@ public class ReentrantLock {
 
     /**
      * 这里底层调用的是Unsafe的park()方法，
-     * 并返回中断位
+     * 并返回中断位标识
      */
     // AbstractQueuedSynchronizer.parkAndCheckInterrupt()
 //        private final boolean parkAndCheckInterrupt() {
@@ -517,7 +518,7 @@ public class ReentrantLock {
 //                if (t.waitStatus <= 0)
 //                    s = t;
 //        }
-//        // 如果下一个节点不为空，则唤醒它
+//        // 如果s节点不为空，则唤醒它
 //        if (s != null)
 //            LockSupport.unpark(s.thread);
 //    }

@@ -97,7 +97,7 @@ public class ConditionLock {
      * （1）如果线程中断了，抛出异常
      * （2）新建一个节点加入到条件队列中去；
      * （3）完全释放当前线程占有的锁；
-     * （4）阻塞当前线程，并等待条件的出现；
+     * （4）阻塞当前线程，并等待条件的出现（循环阻塞当前线程的形式实现）；
      * （5）条件已出现（此时节点已经移到AQS的队列中），尝试获取锁；
      * （6）有可能清除条件队列中节点状态waitStatus不是Node.CONDITION（取消状态）的节点并且看是否抛出异常或者给自己设置中断标识
      * 也就是说await()方法内部其实是先释放锁->等待条件->再次获取锁的过程
@@ -120,7 +120,7 @@ public class ConditionLock {
 //
 //            // 上面部分是调用await()时释放自己占有的锁，并阻塞自己等待条件的出现
 //            // *************************分界线*************************  //
-//            // 下面部分是条件已经出现，线程中断跳出while循环
+//            // 下面部分是条件已经出现，线程中断跳出while循环,其中transferAfterCancelledWait还会进入同步队列
 //
 //            if ((interruptMode = checkInterruptWhileWaiting(node)) != 0)
 //                break;
@@ -136,6 +136,17 @@ public class ConditionLock {
 //        // 线程中断，看是否抛出异常或者给自己设置中断标识
 //        if (interruptMode != 0)
 //            reportInterruptAfterWait(interruptMode);
+//    }
+
+    /**
+     * THROW_IE要抛出异常、REINTERRUPT则设置中断标识
+     */
+//    private void reportInterruptAfterWait(int interruptMode)
+//            throws InterruptedException {
+//        if (interruptMode == THROW_IE)
+//            throw new InterruptedException();
+//        else if (interruptMode == REINTERRUPT)
+//            selfInterrupt();
 //    }
 
     /**
@@ -311,6 +322,7 @@ public class ConditionLock {
     /**
      * 把条件队列中的节点放到等待队列中
      * 1. 若是这节点已经取消，直接返回false
+     * 2. 调用AQS的入队方法把节点移到AQS的队列中
      * 若是没有取消，尝试将上一个节点的0更改为-1，若是上一个节点已取消了，或者更新状态为SIGNAL失败（也是说明上一个节点已经取消了）则唤醒当前线程
      * 若是尝试成功，返回true跳出循环
      */
