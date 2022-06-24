@@ -33,8 +33,7 @@ public class ReentrantLock {
 
     // ReentrantLock.tryLock()
     public boolean tryLock() {
-        // 这里公平锁的具体实现在FairSync中，
-        // 非公平锁的实现在Sync.nonfairTryAcquire中
+        // 非公平锁和公平锁的实现在Sync.nonfairTryAcquire中
         return sync.nonfairTryAcquire(1);
     }
 
@@ -256,7 +255,7 @@ public class ReentrantLock {
     /**
      * tryAcquireNanos调用doAcquireNanos
      * 1. 如果线程中断了，抛出异常
-     * 2. 先尝试获取一次锁
+     * 2. 先尝试获取一次锁，获取锁失败加入同步队列，然后尝试获取锁
      */
     // AbstractQueuedSynchronizer.tryAcquireNanos()
 //        public final boolean tryAcquireNanos(int arg, long nanosTimeout)
