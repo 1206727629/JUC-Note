@@ -1,6 +1,6 @@
 Spring和MyBatis:
 
-Spring 事务注解原理，事务传播机制，使用过什么传播机制？
+！Spring 事务注解原理，事务传播机制，使用过什么传播机制？
 ！问循环注入，怎么解决 见：https://segmentfault.com/a/1190000039091691
 ！带有@Transactional和@Async的循环依赖问题 见：https://blog.csdn.net/luoyang_java/article/details/105835112
 ！Spring Bean 循环依赖为什么需要三级缓存 见：https://www.cnblogs.com/asker009/p/14376955.html

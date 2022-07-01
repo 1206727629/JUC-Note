@@ -36,86 +36,83 @@ HashMap的resize过程是怎么样的
 
 JUC：
 1.讲一下JUC 下的线程池，ReenTranLock
-线程池参数 以及提交任务后怎么执行
+！线程池参数 以及提交任务后怎么执行
 线程怎么销毁
-Lock的加锁 和解锁 过程 和公平锁 和非公平锁实现原理
-Conditional 源码有没有看过
+！Lock的加锁 和解锁 过程 和公平锁 和非公平锁实现原理
+！Conditional 源码有没有看过
 阻塞队列 源码有没有看过
-3.什么场景下，都用过哪些并发？你用多线程的时候 Synchrionzed和ReentranLock怎么选择的？选择原则是什么？
+！3.什么场景下，都用过哪些并发？你用多线程的时候 Synchrionzed和ReentranLock怎么选择的？选择原则是什么？
 线上线程池打满，如何优化的？
-ConcurrentHashMap为什么是线程安全的？
-线程池有哪些类型，为什么要选这个，底层实现原理
-concurrentHashMap分段锁原理，java8和java7实现的区别
-如何中断线程，await和sleep区别
+！ConcurrentHashMap为什么是线程安全的？
+！线程池有哪些类型，为什么要选这个，底层实现原理
+！concurrentHashMap分段锁原理，java8和java7实现的区别
+！如何中断线程，await和sleep区别
 线程间的同步用什么方式，使用hashmap时重写哪两个方法，为什么要重写，什么场景下重写
-6.为什么需要多线程，如何理解的（答了充分利用CPU算力，然后问我如何利用，我说阻塞的时候可以切换到其他线程继续执行）
-如何实现线程同步（答了synchronized，ReentrantLock，CAS。应该再加一个ThreadLocal，还有原子类AtomicInteger）
-Java有哪些锁？Synchronized原理？ Synchronized 为什么要进行锁膨胀？ReentrantLock 原理？
-对多线程的理解？（答了看过多线程的源码包括如何实现多线程，继承Thread，实现Runnable，Callable，看了线程池架构的源码，对ThreadPoolExecutor有认识）追问线程池里有哪些重要的成员（corePoolSize，maximumPoolSize，poolSize，ThreadFactory，Blocking Queue，RejectionHandler等。）
-AQS还在哪有使用过？
-3.线程池的重要成员变量（我答了整个框架，Executor顶级接口，ExecutorService次级接口，ThreadPoolExecutor实现类，成员变量包括工厂ThreadFactory，阻塞队列Block Queue，三个关键大小的变量corePoolSize，maximumPoolSize，poolSize）
-ExecutorService用过吗？场景？FixedSizeThreadPool有哪些问题？
-FixedSizeThreadPool为什么会有OOM问题？
-线程池有哪些参数。默认的拒绝策略有哪些。最大线程数有什么用。
-threadlocal用过么，原理是什么。
+16.为什么需要多线程，如何理解的（答了充分利用CPU算力，然后问我如何利用，我说阻塞的时候可以切换到其他线程继续执行）
+！如何实现线程同步（答了synchronized，ReentrantLock，CAS。应该再加一个ThreadLocal，还有原子类AtomicInteger）
+！Java有哪些锁？Synchronized原理？ Synchronized 为什么要进行锁膨胀？ReentrantLock 原理？
+！对多线程的理解？（答了看过多线程的源码包括如何实现多线程，继承Thread，实现Runnable，Callable，看了线程池架构的源码，对ThreadPoolExecutor有认识）追问线程池里有哪些重要的成员（corePoolSize，maximumPoolSize，poolSize，ThreadFactory，Blocking Queue，RejectionHandler等。）
+！3.线程池的重要成员变量（我答了整个框架，Executor顶级接口，ExecutorService次级接口，ThreadPoolExecutor实现类，成员变量包括工厂ThreadFactory，阻塞队列Block Queue，三个关键大小的变量corePoolSize，maximumPoolSize，poolSize）
+！ExecutorService用过吗？场景？FixedSizeThreadPool有哪些问题？
+！FixedSizeThreadPool为什么会有OOM问题？
+！线程池有哪些参数。默认的拒绝策略有哪些。最大线程数有什么用。
+！threadlocal用过么，原理是什么。
 强引用、软引用、弱引用、虚引用有什么区别。
-创建线程池的4种方式。
-ThreadPoolExecutor的内部工作原理。
-分布式环境下，怎么保证线程安全。
+！创建线程池的4种方式。见：https://blog.csdn.net/weixin_45151795/article/details/105870480?spm=1001.2101.3001.6661.1&utm_medium=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7Edefault-1-105870480-blog-52489843.pc_relevant_multi_platform_whitelistv1&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7Edefault-1-105870480-blog-52489843.pc_relevant_multi_platform_whitelistv1&utm_relevant_index=1
+！ThreadPoolExecutor的内部工作原理。
+！分布式环境下，怎么保证线程安全。
 1.线程有哪些状态，等待状态怎么产生，死锁状态的变化过程，中止状态，interrupt()方法
-2.你怎么理解线程安全，哪些场景会产生线程安全问题，有什么解决办法
+！2.你怎么理解线程安全，哪些场景会产生线程安全问题，有什么解决办法（见：https://learn.lianglianglee.com/%E4%B8%93%E6%A0%8F/Java%20%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%2078%20%E8%AE%B2-%E5%AE%8C/07%20%E5%93%AA%E4%BA%9B%E5%9C%BA%E6%99%AF%E9%9C%80%E8%A6%81%E9%A2%9D%E5%A4%96%E6%B3%A8%E6%84%8F%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98%EF%BC%9F.md）
 while(true)里面一直new thread().start()会有什么问题
-volatile作用，原理，怎么保证可见性的，内存屏障
+！volatile作用，原理，怎么保证可见性的，内存屏障
 你了解那些锁，乐观锁和悲观锁，为什么读要加锁，乐观锁为什么适合读场景，写场景不行么，会有什么问题，cas原理
 4.什么情况下产生死锁，怎么排查，怎么解决
 什么情况下产生死锁，怎么排查，怎么解决
-2.Hashmap,concurrenthashmap,hashtable各自的特点区别。 jdk1.8都做了哪些改进？
-3.可重入锁reentrantlock（因为上一题提到了concurrenthashmap的segement继承了这个）。
+！2.Hashmap,concurrenthashmap,hashtable各自的特点区别。 jdk1.8都做了哪些改进？
+！3.可重入锁reentrantlock（因为上一题提到了concurrenthashmap的segement继承了这个）。
 4.volatile和transient关键字。
 juc中的countdownlatch，其概念，使用场景。
 扩展：java中如何查看线程状态，你知道那些java自带的命令。
-7.java内存模型，及jvm内存分区，各有存了什么。
+！7.java内存模型，及jvm内存分区，各有存了什么。
 简述线程池原理，FixedThreadPool用的阻塞队列是什么
-volatile关键字，他是如何保证可见性，有序性
+！volatile关键字，他是如何保证可见性，有序性
 Java锁有了解吗？Synchronized和ReentrantLock区别？说说如何ReentrantLock如何实现超时锁的等待？
-ThreadLocal的实现原理，为什么能保证线程安全
-Volatile 是干什么的？在内存层面上怎么实现的？使用场景是什么？
-synchronized 使用方法，底层是怎么实现的
-Java对 synchronized 有什么 改进？ （偏向锁，轻量锁，重量锁）
-线程池设计，线程数量如何配置选择(高低并发、任务执行时间长以及短的各种场景)
+！ThreadLocal的实现原理，为什么能保证线程安全
+！Volatile 是干什么的？在内存层面上怎么实现的？使用场景是什么？
+！synchronized 使用方法，底层是怎么实现的
+！Java对 synchronized 有什么 改进？ （偏向锁，轻量锁，重量锁）
+！线程池设计，线程数量如何配置选择(高低并发、任务执行时间长以及短的各种场景)
 4. synchonized 和 lock 的实现，synchonized 底层实现、锁升级
-ThreadLocal 用过吗？不 remove 掉会有什么问题？
+！ThreadLocal 用过吗？不 remove 掉会有什么问题？
 22.线上问题，你遇到过什么？具体自己是如何去排查问题的？
 23.说下乐观锁和悲观锁
 24.CAS 中可能出现的ABA 问题讲讲
-25.java 和C++的内存管理上有哪些不同
 
-1.Java如何实现线程安全（synchronized，ReentrantLock，AtomicInteger，ThreadLocal，CAS）
+！1.Java如何实现线程安全（synchronized，ReentrantLock，AtomicInteger，ThreadLocal，CAS）
 2.CAS如何解决ABA问题（版本号）
 3.AtomicInteger的原理（UnSafe类，底层是一句CPU指令，避免了并发问题）
-4.可重入锁是什么，非可重入锁又是什么（略
+！4.可重入锁是什么，非可重入锁又是什么（略
 5.代码，实现生产者和消费者，一个长度100的buffer，10个生产者线程，10个消费者线程
 （我用了ReentrantLock跟Condition，结果忘记了锁的包路径是啥了，我写成了java.util.concurrent.，后来才知道是java.util.concurrent.locks.。。。）
 6.对着代码提问，判定条件的while能不能换成if，为什么？为什么用signalAll，可不可以换成signal，二者有什么区别？
-Java里的锁，有哪几种（synchronized和Reentrantlock）
-5.ReentrantLock有哪些特性（可重入，公平锁），可重入是如何实现的（有一个引用数，非可重入只有01值）
-6.当某个线程获取ReentrantLock失败时，是否会从内核态切换回用户态？ReentrantLock如何存储阻塞的线程的？（AQS，不断轮询前一个结点是否状态发生了变化）所以什么是自旋锁？
+！Java里的锁，有哪几种（synchronized和Reentrantlock）
+！5.ReentrantLock有哪些特性（可重入，公平锁），可重入是如何实现的（有一个引用数，非可重入只有01值）
+！6.当某个线程获取ReentrantLock失败时，是否会从内核态切换回用户态？ReentrantLock如何存储阻塞的线程的？（AQS，不断轮询前一个结点是否状态发生了变化）所以什么是自旋锁？
 
-如果要线程安全，应该用什么类（ConcurrentHashMap）
-7.ConcurrentHashMap的实现？1.7和1.8都说一下。（分段锁，synchronized，CAS）
+！7.ConcurrentHashMap的实现？1.7和1.8都说一下。（分段锁，synchronized，CAS）
 8.synchronized和CAS有什么区别，synchronized的实现原理是什么，CAS呢，CAS如何解决ABA问题（有锁，无锁。monitor（Owner字段，EntryQ字段（互斥锁）），判断有无改变，版本号）
-9.synchronized和Lock有什么区别，Lock的实现原理是什么（AQS，使用CLH锁，维护一个双向队列，存储阻塞线程。每个线程一直监听前一个节点的状态，如果调用了unlock，则停止自旋。）
-10.线程池的重要参数有哪些（poolSize,corePoolSize,maximumPoolSize,ThreadFactory,RejectionHandler)
-11.RejectionHandler有哪些，具体如何操作（4种还是5种来着，略）
-12.线程池的线程在执行完任务会立刻回收吗？（保留corePoolSize个核心线程）
+！9.synchronized和Lock有什么区别，Lock的实现原理是什么（AQS，使用CLH锁，维护一个双向队列，存储阻塞线程。每个线程一直监听前一个节点的状态，如果调用了unlock，则停止自旋。）
+！10.线程池的重要参数有哪些（poolSize,corePoolSize,maximumPoolSize,ThreadFactory,RejectionHandler)
+！11.RejectionHandler有哪些，具体如何操作（4种还是5种来着，略）
+！12.线程池的线程在执行完任务会立刻回收吗？（保留corePoolSize个核心线程）
 
 多线程编程，你的项目中有哪些运用到了
 
-1.如何让一个线程优雅地退出
-2.外部线程调用该线程的 interrupt()方法
+！1.如何让一个线程优雅地退出
+！2.外部线程调用该线程的 interrupt()方法
 注意：如果线程处于阻塞状态，只会抛出interrupt 异常，而不会设置中断状态，所以捕获
 异常后要做相应处理
-3、检测到中断状态，作相应处理，（释放资源，或者进行完当前任务）
+！3、检测到中断状态，作相应处理，（释放资源，或者进行完当前任务）
 
 ES:
 9.ES 怎么用的？数据量级多少？为什么用ES 不用Hbase？
