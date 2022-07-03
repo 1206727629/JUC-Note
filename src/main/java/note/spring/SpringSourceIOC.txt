@@ -1,0 +1,42 @@
+以new AnnotationConfigApplicationContext为例讲解源码
+org.springframework.context.annotation.AnnotationConfigApplicationContext#AnnotationConfigApplicationContext(java.lang.Class<?>...)
+org.springframework.context.support.AbstractApplicationContext#refresh（刷新容器。该方法运行完以后，容器就创建完成了，包括所有的bean对象也都创建和初始化完成了）
+	org.springframework.context.support.AbstractApplicationContext#prepareRefresh（刷新容器前的预处理工作）
+		org.springframework.context.support.AbstractApplicationContext#initPropertySources（空实现，留给子类实现）
+		org.springframework.context.support.AbstractApplicationContext#getEnvironment（获取其环境变量）
+		org.springframework.core.env.AbstractEnvironment#validateRequiredProperties（获取其环境变量，然后校验属性的合法性）
+	org.springframework.context.support.AbstractApplicationContext#obtainFreshBeanFactory（获取BeanFactory的实例的）
+		org.springframework.context.support.GenericApplicationContext#refreshBeanFactory（在创建GenericApplicationContext对象时，无参构造器里面就new出来了beanFactory这个对象，类型是org.springframework.beans.factory.support.DefaultListableBeanFactory。AnnotationConfigApplicationContext类继承了GenericApplicationContext这个类，所以，当我们实例化AnnotationConfigApplicationContext时就会调用其父类的构造方法，相应地这时就会对我们的BeanFactory进行实例化了）
+			org.springframework.beans.factory.support.DefaultListableBeanFactory#setSerializationId（设置序列化id，即org.springframework.context.annotation.AnnotationConfigApplicationContext@51e2adc7）
+		org.springframework.context.support.GenericApplicationContext#getBeanFactory（用ConfigurationListableBeanFactory接口去接受我们刚刚实例化的BeanFactory对象（DefaultListableBeanFactory类型的））
+	org.springframework.context.support.AbstractApplicationContext#prepareBeanFactory（前面刚刚创建好的BeanFactory还没有做任何设置呢，所以就得在这儿对BeanFactory做一些设置了。比如设置BeanFactory的类加载器，添加一个叫ApplicationContextAwareProcessor的BeanPostProcessor作用就是在bean初始化以后来判断这个bean是不是实现了ApplicationContextAware接口，忽略的自动装配的接口，加入像BeanFactory、ResourceLoader、ApplicationEventPublisher（它就是上一讲我们讲述的事件派发器）以及ApplicationContext（也就是我们的IOC容器）这些东西，添加编译时与AspectJ支持相关的东西，添加三个与环境变量相关的bean）
+	org.springframework.context.support.AbstractApplicationContext#postProcessBeanFactory（空实现，留给子类实现。在BeanFactory创建并预处理完成以后做进一步的设置）
+	org.springframework.context.support.AbstractApplicationContext#invokeBeanFactoryPostProcessors
+		org.springframework.context.support.PostProcessorRegistrationDelegate#invokeBeanFactoryPostProcessors(org.springframework.beans.factory.config.ConfigurableListableBeanFactory, java.util.List<org.springframework.beans.factory.config.BeanFactoryPostProcessor>)（按照PriorityOrdered ，Ordered 和非排序要求的processor 依次调用）
+	org.springframework.context.support.AbstractApplicationContext#registerBeanPostProcessors(注册bean的后置处理器，注册顺序为  PriorityOrdered  -> Ordered -> 普通的 -> MergedBeanDefinitionPostProcessor)
+		org.springframework.context.support.PostProcessorRegistrationDelegate#registerBeanPostProcessors(org.springframework.beans.factory.config.ConfigurableListableBeanFactory, org.springframework.context.support.AbstractApplicationContext)（注意还额外注册了MergedBeanDefinitionPostProcessor、ApplicationListenerDetector这两种类型的BeanPostProcessor）
+	org.springframework.context.support.AbstractApplicationContext#initMessageSource（主要做国际化功能）
+	org.springframework.context.support.AbstractApplicationContext#initApplicationEventMulticaster（初始化事件派发器）
+	org.springframework.context.support.AbstractApplicationContext#onRefresh（空实现，留给子类实现）
+	org.springframework.context.support.AbstractApplicationContext#registerListeners（注册监听器）
+	org.springframework.context.support.AbstractApplicationContext#finishBeanFactoryInitialization（初始化所有剩下的单实例bean）
+		org.springframework.beans.factory.support.DefaultListableBeanFactory#preInstantiateSingletons（初始化所有剩下的单实例bean）
+			org.springframework.beans.factory.support.AbstractBeanFactory#isFactoryBean(java.lang.String)（如果我们的bean确实实现了FactoryBean接口，那么Spring就会调用FactoryBean接口里面的getObject方法来帮我们创建对象）
+			org.springframework.beans.factory.support.AbstractBeanFactory#getBean(java.lang.String)（把我们要创建的bean所依赖的bean先创建出来）
+				org.springframework.beans.factory.support.AbstractBeanFactory#doGetBean
+					org.springframework.beans.factory.support.DefaultSingletonBeanRegistry#getSingleton(java.lang.String, boolean)（从缓存中获取其实就是从singletonObjects（一级缓存）属性里面来获取。从缓存中获取到了之后会赋值给一个叫sharedInstance的变量，以前有一些单实例bean已经被创建好了，而且这些单实例bean也已经被缓存起来了，通俗一点说就是，所有创建过的单实例bean都会被缓存起来，所以这儿会调用getSingleton方法先从缓存中获取。如果能获取到，那么说明这个单实例bean之前已经被创建过了。）
+						org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#createBean(java.lang.String, org.springframework.beans.factory.support.RootBeanDefinition, java.lang.Object[])（org.springframework.beans.factory.ObjectFactory#getObject下的方法）
+							org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#resolveBeforeInstantiation（InstantiationAwareBeanPostProcessor这种类型的BeanPostProcessor。在创建我们单实例bean之前，先来给BeanPostProcessor一个返回其代理对象的机会）
+								org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#applyBeanPostProcessorsBeforeInstantiation（会先判断遍历出的每一个BeanPostProcessor是不是InstantiationAwareBeanPostProcessor这种类型的，如果是，那么便来触发其postProcessBeforeInstantiation方法，该方法定义在InstantiationAwareBeanPostProcessor接口中）
+								org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#applyBeanPostProcessorsAfterInstantiation（InstantiationAwareBeanPostProcessor中的postProcessBeforeInstantiation方法返回对象不为null，即返回代理对象，则会调用此方法）
+							org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#doCreateBean（创建bean实例）
+								org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#createBeanInstance（反射调用构造器实例化对象）
+								org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#applyMergedBeanDefinitionPostProcessors（如果是MergedBeanDefinitionPostProcessor这种类型的，那么就调用其postProcessMergedBeanDefinition方法）
+								org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#populateBean（为对象赋值，遍历获取到的所有后置处理器，如果是InstantiationAwareBeanPostProcessor这种类型的，那么就先后调用其postProcessAfterInstantiation、postProcessPropertyValues方法）
+								org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#initializeBean(java.lang.String, java.lang.Object, org.springframework.beans.factory.support.RootBeanDefinition)（初始化对象）
+									org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#invokeAwareMethods（执行XxxAware接口中的方法，判断我们的bean是不是实现了BeanNameAware、BeanClassLoaderAware、BeanFactoryAware这些Aware接口的，若是则回调接口中对应的方法）
+									org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#applyBeanPostProcessorsBeforeInitialization（会遍历所有的后置处理器，然后依次执行所有后置处理器的postProcessBeforeInitialization方法，一旦后置处理器的postProcessBeforeInitialization方法返回了null以后，则后面的后置处理器便不再执行了，而是直接退出for循环）
+									org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#invokeInitMethods（执行初始化方法，一开始就会来判断我们的bean是否是InitializingBean接口的实现，若是则执行该接口中定义的初始化方法。还会通过反射调用@Bean或配置文件指定的init方法）
+									org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#applyBeanPostProcessorsAfterInitialization（会遍历所有的后置处理器，然后依次执行所有后置处理器的postProcessAfterInitialization方法，一旦后置处理器的postProcessAfterInitialization方法返回了null以后，则后面的后置处理器便不再执行了，而是直接退出for循环）
+									org.springframework.beans.factory.support.AbstractBeanFactory#registerDisposableBeanIfNecessary（注册bean的销毁方法的）
+
