@@ -37,5 +37,3 @@ org.springframework.aop.framework.CglibAopProxy.DynamicAdvisedInterceptor#interc
 	                org.springframework.aop.framework.adapter.AfterReturningAdviceInterceptor#invoke（那么在调用完后置通知之后，其实按理来说应该是要返回到第三个拦截器（即AfterReturningAdviceInterceptor）中的，但是这个拦截器并没有对异常进行处理，而是直接抛给了上一个拦截器（即AspectJAfterThrowingAdvice），所以，你会看到，最终是返回到了第二个拦截器（即AspectJAfterThrowingAdvice）中）
 	                org.springframework.aop.aspectj.AspectJAfterThrowingAdvice#invoke（异常通知。如果目标方法运行时没有抛异常，那么调用返回通知
                                                                                        如果目标方法运行时没有抛异常，那么后置通知调用完之后，就应该返回到第三个拦截器（即AfterReturningAdviceInterceptor）中）
-
-
