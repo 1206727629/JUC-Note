@@ -1,0 +1,41 @@
+去看设计模式
+AspectJAutoProxyRegistrar是@EnableAspectJAutoProxy注解导入的组件
+org.springframework.context.annotation.AspectJAutoProxyRegistrar#registerBeanDefinitions
+	org.springframework.aop.config.AopConfigUtils#registerAspectJAnnotationAutoProxyCreatorIfNecessary(org.springframework.beans.factory.support.BeanDefinitionRegistry)
+		org.springframework.aop.config.AopConfigUtils#registerOrEscalateApcAsRequired
+			org.springframework.beans.factory.support.BeanDefinitionRegistry#registerBeanDefinition（注册的组件的类型是org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator，组件的名字是org.springframework.aop.config.internalAutoProxyCreator）
+			（向Spring的配置类上添加@EnableAspectJAutoProxy注解之后，会向IOC容器中注册AnnotationAwareAspectJAutoProxyCreator，翻译过来就叫注解装配模式的AspectJ切面自动代理创建器）
+
+前面是IOC过程（这个BeanPostProcessor（即AnnotationAwareAspectJAutoProxyCreator）创建完了以后，会放进了一个叫什么internalPostProcessors的这个集合里面），直接从这里开始看
+org.springframework.aop.framework.autoproxy.AbstractAutoProxyCreator#postProcessBeforeInstantiation（判断当前的切面这个bean有没有在advisedBeans集合里面。advisedBeans是个什么东西呢？它是一个Map集合，里面保存了所有需要增强的bean的名称。那什么又叫需要增强的bean呢？就是那些业务逻辑类，例如MathCalculator，因为它里面的那些方法是需要切面来切的，所以我们要执行它里面的方法，不能再像以前那么简单地执行了，得需要增强，这就是所谓的需要增强的bean）
+	org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator#isInfrastructureClass（看是否是基础类型（是否是实现了Advice、Pointcut、Advisor以及AopInfrastructureBean这些接口）或者@Aspect注解的切面或者需要跳过，则加入advisedBeans）
+	org.springframework.aop.aspectj.autoproxy.AspectJAwareAdvisorAutoProxyCreator#shouldSkip（判断被包装成Advisor的增强器也就是通知方法是不是AspectJPointcutAdvisor这种类型）
+org.springframework.aop.framework.autoproxy.AbstractAutoProxyCreator#postProcessAfterInitialization
+	org.springframework.aop.framework.autoproxy.AbstractAutoProxyCreator#wrapIfNecessary
+		org.springframework.aop.framework.autoproxy.AbstractAdvisorAutoProxyCreator#getAdvicesAndAdvisorsForBean（获取当前bean的所有增强器）
+			org.springframework.aop.framework.autoproxy.AbstractAdvisorAutoProxyCreator#findEligibleAdvisors（来获取MathCalculator这个类型的所有增强器，也可以说成是可用的增强器）
+				org.springframework.aop.framework.autoproxy.AbstractAdvisorAutoProxyCreator#findAdvisorsThatCanApply
+					org.springframework.aop.support.AopUtils#canApply(org.springframework.aop.Advisor, java.lang.Class<?>, boolean)（判断每一个增强器是不是可用的，我们可以看到，这一块的逻辑就是用PointcutAdvisor（切入点表达式）开始来算一下每一个通知方法能不能匹配上，现在每一个增强器（通知方法）都是能匹配上的哟）
+		org.springframework.aop.framework.autoproxy.AbstractAutoProxyCreator#createProxy（若当前bean需要增强，则创建当前bean的代理对象）
+			org.springframework.aop.framework.ProxyFactory#getProxy(java.lang.ClassLoader)
+				org.springframework.aop.framework.DefaultAopProxyFactory#createAopProxy（使用jdk或cglib创建代理对象）（如果当前类是有实现接口的，那么就使用jdk来创建动态代理，如果当前类没有实现接口，例如MathCalculator类，此时jdk是没法创建动态代理的，那么自然就得使用cglib来创建动态代理了）
+从容器中得到的MathCalculator对象，也就是说容器中存放的这个增强后的代理对象里面保存了所有通知方法的详细信息，以及还包括要切入的目标对象。
+
+org.springframework.aop.framework.CglibAopProxy.DynamicAdvisedInterceptor#intercept（在执行目标方法之前，先让这个AOP代理来拦截一下。接下来，我们就来看看它的拦截逻辑）
+	org.springframework.aop.framework.AdvisedSupport#getInterceptorsAndDynamicInterceptionAdvice（根据ProxyFactory对象获取将要执行的目标方法的拦截器链（chain，chain翻译过来就是链的意思），其中，advised变量代表的是ProxyFactory对象，method参数代表的是即将要执行的目标方法（即div()方法））
+	    org.springframework.aop.framework.DefaultAdvisorChainFactory#getInterceptorsAndDynamicInterceptionAdvice（然后在后面遍历所有增强器，并为该集合添加值，最后返回该集合。最终，整个拦截器链就会被封装到List集合中。PointcutAdvisor、IntroductionAdvisor的Advisor包装成一个Interceptor[]类型的interceptors，最后再把它添加到一开始创建的List集合并返回）
+		    org.springframework.aop.framework.adapter.DefaultAdvisorAdapterRegistry#getInterceptors（有三个适配器可以适配（MethodBeforeAdviceAdapter：专门来转前置通知的
+                                                                                                                        AfterReturningAdviceAdapter：专门来返回置通知的
+                                                                                                                        ThrowsAdviceAdapter：专门来异常置通知的）。其中AspectJAfterThrowingAdvice和AspectJAfterAdvice这俩人家本来就是拦截器，而AfterReturningAdviceInterceptor和MethodBeforeAdviceInterceptor这俩是使用适配器重新转换之后的拦截器）
+	org.springframework.aop.framework.ReflectiveMethodInvocation#proceed（执行获取到的拦截器链，currentInterceptorIndex成员变量是来记录我们当前拦截器的索引的（从-1开始））
+		org.aopalliance.intercept.MethodInterceptor#invoke（MethodInterceptor是个基类，取决于在上面的proceed中遍历到了哪个拦截器）
+		    org.aopalliance.intercept.MethodInterceptor#invoke（执行拦截器的invoke()方法其实就是执行CglibMethodInvocation对象的proceed()方法）
+	            org.springframework.aop.framework.ReflectiveMethodInvocation#proceed（和上面的proceed形成递归）
+	                org.springframework.aop.framework.adapter.MethodBeforeAdviceInterceptor#invoke（前置通知拦截器，它会先调用前置通知，再来调用CglibMethodInvocation对象的proceed()方法，其中mi变量指代的就是CglibMethodInvocation对象）
+	                    org.springframework.aop.framework.ReflectiveMethodInvocation#invokeJoinpoint（利用反射来执行目标方法。如果没有拦截器链，或者当前拦截器的索引和拦截器总数-1的大小一样，那么便直接执行目标方法。前置通知执行完后执行）
+	                org.springframework.aop.aspectj.AspectJAfterAdvice#invoke（后置通知）
+	                org.springframework.aop.framework.adapter.AfterReturningAdviceInterceptor#invoke（那么在调用完后置通知之后，其实按理来说应该是要返回到第三个拦截器（即AfterReturningAdviceInterceptor）中的，但是这个拦截器并没有对异常进行处理，而是直接抛给了上一个拦截器（即AspectJAfterThrowingAdvice），所以，你会看到，最终是返回到了第二个拦截器（即AspectJAfterThrowingAdvice）中）
+	                org.springframework.aop.aspectj.AspectJAfterThrowingAdvice#invoke（异常通知。如果目标方法运行时没有抛异常，那么调用返回通知
+                                                                                       如果目标方法运行时没有抛异常，那么后置通知调用完之后，就应该返回到第三个拦截器（即AfterReturningAdviceInterceptor）中）
+
+
