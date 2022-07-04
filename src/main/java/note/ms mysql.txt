@@ -54,11 +54,12 @@ SELECT * FROM tableA WHERE  id >=
 ！MySQL 的隔离级别，幻读，MVCC 原理 ，乐观锁 在什么隔离级别才能使用？
 ！数据库的隔离级别，可重复读是否解决了幻读的问题，发生幻读举个例子。mysql怎么解决幻读的问题。
 ！mysql有哪些锁。当前读怎么操作。
+锁的总结：https://blog.csdn.net/qq_40174198/article/details/111835482及https://www.cnblogs.com/goloving/p/13590955.html
 
 写一道mysql的语句吧, 查找学生表里成绩小于60分的倒数第3个学生的名字和成绩
 来做个题吧。。。。sql查询学生的平时成绩，涉及3表联查我跪了。。。
 数据量大嘛？Mysql慢查询如何优化？例子？
-数据库sql的执行过程
+！数据库sql的执行过程
 ！频繁的增删数据量某个表，数据库最终数据只有几万或者更少，为什么查询会变慢
 你们建表会定义自增id么，为什么，自增id用完了怎么办
 ！几千万的数据量会有性能问题吗 怎么解决大表关联
@@ -75,3 +76,5 @@ mysql主从复制，主从延时怎么解决
 存储引擎的选择、字段类型的选择、索引的选择、分区分表、主从复制、读写分离、SQL优化。
 ！MyISAM和InnoDB区别和应用场景（详情见:https://www.jianshu.com/p/dc60346d55a2）
 MySQL中delete，drop，truncate 区别：详见（https://www.runoob.com/note/36611）
+redo日志介绍：https://juejin.cn/post/6989837603776233486
+binlog日志介绍：https://juejin.cn/post/6992518022262980639
