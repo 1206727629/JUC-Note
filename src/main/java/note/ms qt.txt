@@ -1,10 +1,10 @@
 Java集合:
-7.HashMap的扩容过程？ 会发生什么问题？
-hashMap原理,put和resize过程
+！7.HashMap的扩容过程？ 会发生什么问题？
+！hashMap原理,put和resize过程
 JDK1.8有哪些新特性（lambda简化匿名内部类，接口default方法，流操作stream函数式编程，Optional类简化了处理null值）
-对象一定分配在堆上么，JIT，分层编译，逃逸分析
-来问一些java基础，jvm内存空间有了解吗？Integer a= new Integer(1), Integer b= new Integer(1) 相等吗？为什么相等？(没答上来, 只知道是-128,127 之间会相等, 具体不知道, 校招时候回答了很多遍, 现在又忘了)
-使用hashmap时重写哪两个方法，为什么要重写，什么场景下重写
+！对象一定分配在堆上么，JIT，分层编译，逃逸分析
+！来问一些java基础，jvm内存空间有了解吗？Integer a= new Integer(1), Integer b= new Integer(1) 相等吗？为什么相等？(没答上来, 只知道是-128,127 之间会相等, 具体不知道, 校招时候回答了很多遍, 现在又忘了) 详情见：https://blog.csdn.net/u011130764/article/details/103480865?spm=1001.2101.3001.6650.1&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7Edefault-1-103480865-blog-121022751.pc_relevant_multi_platform_whitelistv1_exp2&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7Edefault-1-103480865-blog-121022751.pc_relevant_multi_platform_whitelistv1_exp2&utm_relevant_index=1
+！使用hashmap时重写哪两个方法，为什么要重写，什么场景下重写
 
 有没有想过为什么会有这么多的编码格式。
 讲一下常见编码方式？ 编码的意义：计算机中存储的最小单元是一个字节即8bit，所能表示的字符范围是255个， 而人类要表示的符号太多，无法用一个字节来完全表示，固需要将符号编码，将各种语言翻 译成计算机能懂的语言。
@@ -17,26 +17,26 @@ JDK1.8有哪些新特性（lambda简化匿名内部类，接口default方法，�
 3、utf-8编码中的中文占几个字节；int型几个字节？utf-8是一种变长编码技术，utf-8编码中的中文占用的字节不确定，可能2个、3个、4个，int型占4个字节。
 new一个对象，从底层来说会发生什么；
 new一个HashMap，for循环put进入10000个数据会发什么；
-Stringbuffer Stringbuilder的区别
-了解java的哪些字符串对象 讲讲hashmap
+！Stringbuffer Stringbuilder的区别（String对象做拼接操，在JDK1.5之前会转换为StringBuffer的连续append操作，但是在JDK1.5之后将会转换为StringBuilder。
+                                 原因是JDK1.5之后对锁机制进行了优化，在单个线程中，经过“逃逸分析”算法确定累加操作不会逃出当前方法所在作用域时，将会去除StringBuffer append操作时的锁行为（在解释运行时仍会加锁，在编译过程中会去锁）所以经过去锁之后的append实则为StringBuild。（HotSport虚拟机实现是这样。）详情请参考《深入理解JVM虚拟机》）
+！了解java的哪些字符串对象 讲讲hashmap
 
-6、谈谈你对解析与分派的认识。 解析指方法在运行前，即编译期间就可知的，有一个确定的版本，运行期间也不会改变。解 析是静态的，在类加载的解析阶段就可将符号引用转变成直接引用。
-分派可分为静态分派和动态分派，重载属于静态分派，覆盖属于动态分派。静态分派是指在重载时通过参数的静态类型而非实际类型作为判断依据，在编译阶段，编译器可根据参数的静态类型决定使用哪一个重载版本。动态分派则需要根据实际类型来调用相应的方法。
-7、修改对象A的equals方法的签名，那么使用HashMap存放这个对象实例的时候，会调
+！6、谈谈你对解析与分派的认识。 解析指方法在运行前，即编译期间就可知的，有一个确定的版本，运行期间也不会改变。解析是静态的，在类加载的解析阶段就可将符号引用转变成直接引用。
+！分派可分为静态分派和动态分派，重载属于静态分派，覆盖属于动态分派。静态分派是指在重载时通过参数的静态类型而非实际类型作为判断依据，在编译阶段，编译器可根据参数的静态类型决定使用哪一个重载版本。动态分派则需要根据实际类型来调用相应的方法。
+！7、修改对象A的equals方法的签名，那么使用HashMap存放这个对象实例的时候，会调
 用哪个equals方***调用对象的equals方法，如果对象的equals方法没有被重写，equals方法和==都是比较 栈内局部变量表中指向堆内存地址值是否相等。
 8、Java中实现多态的机制是什么？ 多态是指程序中定义的引用变量所指向的具体类型和通过该引用变量发出的方法调用在编 译时不确定，在运行期间才确定，一个引用变量到底会指向哪个类的实例。这样就可以不用 修改源程序，就可以让引用变量绑定到各种不同的类实现上。Java实现多态有三个必要条件： 继承、重定、向上转型，在多态中需要将子类的引用赋值给父类对象，只有这样该引用才能 够具备调用父类方法和子类的方法。
-hashmap原理，put和get，为什么是8转红黑树，红黑树节点添加过程，什么时候扩容，为什么是0.75，扩容步骤，为什么分高低位，1.7到1.8有什么优化，hash算法做了哪些优化，头插法有什么问题，为什么线程不安全
+！hashmap原理，put和get，为什么是8转红黑树，红黑树节点添加过程，什么时候扩容，为什么是0.75，扩容步骤，为什么分高低位，1.7到1.8有什么优化，hash算法做了哪些优化，头插法有什么问题，为什么线程不安全
 arraylist原理，为什么数组加transient，add和get时间复杂度，扩容原理，和linkedlist区别，原理，分别在什么场景下使用，为什么
-2.Java的Map有哪些实现类，分别简要介绍一下
-3.说一下HashMap的原理，为什么用链地址去解决冲突，为什么用红黑树
+！2.Java的Map有哪些实现类，分别简要介绍一下
+！3.说一下HashMap的原理，为什么用链地址去解决冲突，为什么用红黑树
+！HashMap 1.8的安全问题：https://blog.csdn.net/m0_60907200/article/details/123443149，1.7的安全问题：https://blog.csdn.net/Dongguabai/article/details/115606801
 
 
 java object有哪些方法（hashcode equals notify wait）
-你们的开发框架是怎么样的
-Hashcode 和 equals有哪些区别呢 什么场景下使用呢
-equals和compareto有什么区别
-重写一个对象的hashcode和equals怎么权衡 hashcode一定要重写吗
-Hashmap的put操作是怎么做的 哈希操作是如何进行的呢
+！Hashcode 和 equals有哪些区别呢 什么场景下使用呢
+！重写一个对象的hashcode和equals怎么权衡 hashcode一定要重写吗
+！Hashmap的put操作是怎么做的 哈希操作是如何进行的呢
 
 
 
