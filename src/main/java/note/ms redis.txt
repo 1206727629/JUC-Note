@@ -10,7 +10,7 @@ redis缓存回收机制
 怎么保证redis和mysql的一致性，redis网络原因执行超时了会执行成功么，那不成功怎么保证数据一致性
 如果你mysql存入了, 但是redis删除失败了怎么解决？反过来呢? 你又怎么解决？
 
-redis集群，为什么是16384，哨兵模式，选举过程，会有脑裂问题么，raft算法，优缺点
+redis集群，为什么是16384(详情见：https://blog.csdn.net/wngpenghao/article/details/117930000)，哨兵模式，选举过程，会有脑裂问题么，raft算法，优缺点
 ！Redis怎么部署的？Sential模式有什么问题？Sentiential挂了怎么办？
 ！Redis 集群 性能 了解吗？
 ！Redis集群怎么部署的 一条写入什么时候可以当成提交了

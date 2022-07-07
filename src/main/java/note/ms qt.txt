@@ -37,7 +37,7 @@ java object有哪些方法（hashcode equals notify wait）
 ！Hashcode 和 equals有哪些区别呢 什么场景下使用呢
 ！重写一个对象的hashcode和equals怎么权衡 hashcode一定要重写吗
 ！Hashmap的put操作是怎么做的 哈希操作是如何进行的呢
-
+初始化容量的问题：https://developer.51cto.com/article/660220.html
 
 
 
