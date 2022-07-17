@@ -64,7 +64,7 @@ SELECT * FROM tableA WHERE  id >=
 
 ！MySQL 主从同步原理
 mysql主从复制，主从延时怎么解决
-分库分表做过么(详情见：https://mp.weixin.qq.com/s/i2eXbU1xrqJY51ETIPs0dw)，怎么做到不停机扩容，双写数据丢失怎么办，跨库事务怎么解决
+分库分表做过么(详情见：https://mp.weixin.qq.com/s/i2eXbU1xrqJY51ETIPs0dw、实战文章：https://mp.weixin.qq.com/s/A2MYOFT7SP-7kGOon8qJaw)，怎么做到不停机扩容，双写数据丢失怎么办，跨库事务怎么解决
 
 ！数据库中是否会出现死锁？数据库中的死锁避免是否可用刚才说的方法来避免？
 ！mysql日志文件有哪些，分别介绍下作用
