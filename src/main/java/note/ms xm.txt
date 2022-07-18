@@ -91,6 +91,11 @@ redis有用过一些高级功能吗？什么情况使用分布式锁？分布式
 方法六、限流某个接口的总并发/请求数，使用 Java 中的 AtomicLong，示意代码：
 方法七、 限流某个接口的时间窗请求数使用 Guava 的 Cache，示意代码：
 
+JWT组成：https://github.com/Snailclimb/JavaGuide/blob/main/docs/system-design/security/jwt-intro.md
+JWT和session的对比、JWT失效注销：https://github.com/Snailclimb/JavaGuide/blob/main/docs/system-design/security/advantages&disadvantages-of-jwt.md
+Access Token 与 Refresh Token的区别：https://segmentfault.com/a/1190000021867342
+Oauth2的授权码模式为什么要用code获取token：知乎（博主 说话好巢的答案）https://www.zhihu.com/question/275041157
+
 学信网面试补充：
 单元测试有搞过吗？（就说说遇到难点，比如某天晚上林哥和老谷熬夜帮你看的问题）
 定时任务怎么解决执行重复的问题？？延申出雷神说的定时任务
