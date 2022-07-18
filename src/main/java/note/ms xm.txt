@@ -82,12 +82,12 @@ redis在你们项目中怎么使用的，怎么保证数据库和缓存的一致
 redis有用过一些高级功能吗？什么情况使用分布式锁？分布式锁的加锁语句？Redission的底层原理？
 分布式id如何生成（http://mp.weixin.qq.com/s?__biz=MjM5ODYxMDA5OQ==&mid=403837240&idx=1&sn=ae9f2bf0cc5b0f68f9a2213485313127&chksm=3b2ea4e40c592df246a36625bf525dfeb6757f426662ee77f38b1d5a1e47a4293980b7e60cc1&mpshare=1&scene=23&srcid=0711CRjmQ33wBzCe9YA9yej7&sharer_sharetime=1658036847307&sharer_shareid=b40e141512d10eddf8530bd5dee3ece9#rd）
 
-项目限流的实现：
+项目限流的实现（见：https://juejin.cn/post/6844903631146188813）：
 （方法一、使用google的guava，令牌桶算法实现：平滑突发限流 ( SmoothBursty) 、平滑预热限流 ( SmoothWarmingUp) 实现。
 方法二、请求一次redis增加1，key可以是IP+时间或者一个标识+时间，没有就创建，需要设置过期时间。
 方法三、分布式限流，分布式限流最关键的是要将限流服务做成原子化，而解决方案可以使用redis+lua或者nginx+lua技术进行实现
 方法四、可以使用池化技术来限制总资源数：连接池、线程池。比如分配给每个应用的数据库连接是 100，那么本应用最多可以使用 100 个资源，超出了可以 等待 或者 抛异常。
-方法五、限流总并发/连接/请求数。
+方法五、限流总并发/连接/请求数。Tomcat中的Connector配置
 方法六、限流某个接口的总并发/请求数，使用 Java 中的 AtomicLong，示意代码：
 方法七、 限流某个接口的时间窗请求数使用 Guava 的 Cache，示意代码：
 
