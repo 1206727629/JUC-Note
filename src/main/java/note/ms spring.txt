@@ -8,7 +8,7 @@ Spring和MyBatis:
 Spring用了哪些设计模式
 ！Bean的几种初始化方式 默认方式
 ！Aop怎么实现的 有aop不生效的情况吗（独立事务不对）
-spring源码分析怎么解决三级缓存
+！spring源码分析怎么解决三级缓存
 
 ！Ioc和AOP简单讲下
 ！动态代理和静态代理有什么区别。什么场景使用？ 代理是一种常用的设计模式，目的是：为其他对象提供一个代理以控制对某个对象的访问， 将两个类的关系解耦。代理类和委托类都要实现相同的接口，因为代理真正调用的是委托类 的方法。
@@ -24,17 +24,16 @@ spring源码分析怎么解决三级缓存
 spring boot是怎么加载tomcat的？
 ！springboot的启动原理（说了main函数，类加载器，主类的注解等）
 ！SpringBoot相比Spring的优势（配置简单，去XML，代码简洁，便于集成各种框架，适合构建微服务）
-说说一个请求到达spring boot之后是怎么处理的？
+说说一个请求到达spring boot之后是怎么处理的？(替换成Spring MVC的回答)
 
 Spring MVC中，@RequestMapping的实现原理？这边没有了解过，询问了你来设计会怎么设计？url与接口的怎么完成注册？怎么根据url匹配到接口？如果匹配到多个接口，如果选择？
-SpringMVC里的MVC是什么意思？（答了MVC设计模式，说了model，view，controller的解耦思想）追问我有没有看过SpringMVC的源码（我说没有，但我知道它的底层原理是通过DispatcherServlet去处理页面映射，数据格式的处理等等）
+！SpringMVC里的MVC是什么意思？（答了MVC设计模式，说了model，view，controller的解耦思想）追问我有没有看过SpringMVC的源码（我说没有，但我知道它的底层原理是通过DispatcherServlet去处理页面映射，数据格式的处理等等）
 讲讲拦截器和过滤器有啥区别呢？
 如何设计Restful接口
-get和post的区别
-springmvc常用的注解
+！get和post的区别
+spring mvc常用的注解
 
 MyBatis项目启动之后，数据库发生了修改，这时候应该怎么办？（我说修改Mapper）追问如何修改，我说不会，面试官说这部分是热部署相关，要去了解一下～
-ORM用的什么？Mybatis和hibernates的区别？你觉得谁更好用呢？
 了解mybatis吗 它的分页组件是怎么实现的
 mybatis怎么从一个mapper组装成一个类
 Mybatis的延迟加载 一二级缓存 $&[的区别
