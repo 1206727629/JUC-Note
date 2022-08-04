@@ -1,0 +1,320 @@
+2022.2.28 芋道源码
+2. Java压缩20M文件从30S到1S的优化过程
+4. 爆肝，52条SQL语句，性能优化
+14. 如何用Redis统计独立用户访问量
+18. Spring Boot整合Quartz实现Java定时任务的动态配置
+19. 腾讯Code Review
+22. 单点登录系统原理与实现
+28. 死磕18哥Java8日期处理
+35. SpringBoot，来实现MySQL读写分离技术
+36. 数据量很大，分页查询很慢，有什么优化方案?
+37. 不重启JVM，替换掉已经加载的类
+39. Spring的Bean生命周期
+45. 还在封装各种Util工具类
+49. SpringBoot启动原理
+54. 如何快速判断某URL是否在20亿的网址URL集合中
+55. i++线程安全吗？
+57. 为什么HashMap并发时会引起死循环
+59. nginx常用配置清单
+61. 线程池中多余的线程是如何回收的
+68. Spring中如Service有多个实现类，它怎么知道该注入哪个ServiceImpl
+69. Integer、new Integer()和int比较的面试题
+70. kill -9
+71. Spring MVC的处理流程是怎样的
+72. Spring事务失效的场景有哪些？如何解决？
+73. 在IDEA中的各种调试技巧，轻松定位Bug
+75. Java8之Optional判空，简化判空操作
+78. 7年Java后端被淘汰
+81. 你只会用！=null判空?
+82. 分布式唯一ID生成方案
+83. 有了HTTP，为什么还用RPC？
+86. PO,VO,DAO,BO,POJO之间的区别你懂吗？
+87. 到底用Spring BeanUtils还是Apache BeanUtils?
+88. Git这样回退代码，才足够优雅
+90. SpringBoot部署Jar文件
+93. Spring Boot搭建ELK，这才是正确看日志的方式
+94. IOC的原理及手动实现
+101. SpringBoot优雅的配置拦截器方式
+116. 一条update语句引起的事故
+117. 在SQL中如何处理NULL值
+119. SQL调优实战
+124. 数据库连接池到底应该设多大？
+125. 线程池如何重复利用空闲的线程执行任务的
+126. 定时任务的五种创建方式
+127. QPS、TPS、并发用户数、吞吐量
+128. 拒绝kill -9暴力停止，优雅停止Spring Boot服务
+130. SpringBoot实现登录拦截器
+131. 使用JWT来保护你的SpringBoot应用
+135. new一个对象背后发生了什么
+136. SpringBoot常用注解梳理
+144. 阿里云Redis开发规范
+145. Spring最常用的7大类注解
+147. Spring常见的十大错误
+157. 面试问烂的Spring AOP原理、Spring MVC过程
+158. git提交规范
+167. Spring Boot静态资源处理
+169. MyBatis中的$和#
+171. MyBatis框架下SQL注入攻击的3种方式
+173. Java日志体系
+175. SpringBoot实现Auth认证
+177. Chrome插件
+178. 单点登录8张漫画
+181. Spring为什么建议构造器注入？
+186. Java中的锁有哪些
+191. 统一结果，统一异常，统一日志
+202. @Autowired注解到底怎么实现的
+207. RateLimiter
+209. Java正则表达式处理复杂文本
+210. 基于Redis实现分布式锁思考
+217. Spring AOP的实现原理及应用场景
+228. SpringBoot注解最全详细
+231. SpringSecurity+JWT
+236. Redis延时队列的简单实现
+268. Spring的Bean实例化过程
+307. 不懂isEmpty和isBlank的区别
+311. SpringBoot自动配置原理
+313. Java反射机制的应用
+314. SpringBoot解决跨域
+330. 策略模式+反射工厂
+333. 开放API接口签名验证
+337. 单点登录的三种实现方式
+349. 分布式事务，解决方案
+352. 如何画出优秀的架构图
+353. RabbitMQ和Kafka到底怎么选
+356. Java数组转List的三种方式
+389. Java反射到底慢在哪？
+398. 如何解决Spring循环依赖问题
+401. 架构图
+403. ConcurrentHashMap面试题
+405. toString、String.valueOf、(String)区别
+413. SpringBoot注解原理、自动装配原理
+475. Spring AOP、AspectJ、CGLIB
+478. 18个Java8日期处理
+479. 中断一个线程
+480. 52条SQL语句，性能优化
+487. Spring事务设计原理
+489. Chrome插件
+510. Sharding-Jdbc实现读写分离 + 分库分表
+514. Tomcat组成与工作原理
+515. 女朋友定位地址
+520. Nacos服务注册的原理
+529. Nginx通过Lua + Redis动态封禁IP
+535. Nginx配置清单
+543. SOA和微服务的区别
+551. 图解分库分表
+561. OAuth2 vs JWT
+562. 简单的JVM调优经历
+598. Spring Security和Shiro如何选择
+602. 跨库分页/分表分页
+610. Java日志框架适配
+630. IDEA详解配置
+638. CompletableFuture
+641. SpringBoot全局异常拦截器
+649. SpringBoot五种热部署
+651. 用户登录验证业务流程
+678. SQL的执行顺序
+696. Lambada实现原理
+702. 合理配置线程数
+703. 如何设计API返回码
+706. 入门到精通SpringSecurity
+710. 技术总监需要会什么
+711. MyBatis的执行流程
+751. MySQL的varchar
+752. 分布式ID
+762. 尽量避免使用IN和NOT IN
+790. SpringBean的实例化过程
+796. ConcurrentHashMap面试灵魂拷问
+
+2022.2.28 Java基基
+565.Redis实现限流的三种方式
+564.PageHelper使用ThreadLocal的线程复用问题
+559. 分布式事务解决方案
+549. Kafka看时间轮算法
+548. 如何保护SpringBoot配置文件中的敏感信息
+542. 延时消息常见实现方案
+528. 存ip地址用什么数据类型比较好
+537. 基于Redis实现延时队列服务
+529， 何为微服务、网关、服务发现/注册
+514. 分布式接口幂等性，分布式限流
+509. MyBatis中
+508. 封禁ip
+504. JVM调优
+473. 不要直接使用@Async注解
+472. MyBatis的执行流程
+470. MyBatis Plus是如何动态SQL语句的
+466. 蓝绿发布、滚动发布、灰度发布
+464. 实现Auth认证的几种方式
+463. 动静分离
+457. Redis缓存使用技巧
+455. Chrome插件
+445. MyBatis插入大量数据
+436. MySql大批量插入，如何过滤重复数据
+433.SpringBoot参数校验
+429. Kafka中值得学习的设计
+411. Reids限流
+409. 并发架构
+351. Jmeter做性能测试
+348. 内存泄漏排查
+338. isEmpty和isBlank的却别
+326. Java泛型
+303. Java线上故障
+
+2. Java压缩20M文件从30S到1S的优化过程
+4. 爆肝，52条SQL语句，性能优化
+14. 如何用Redis统计独立用户访问量
+18. Spring Boot整合Quartz实现Java定时任务的动态配置
+19. 腾讯Code Review
+22. 单点登录系统原理与实现
+28. 死磕18哥Java8日期处理
+35. SpringBoot，来实现MySQL读写分离技术
+36. 数据量很大，分页查询很慢，有什么优化方案?
+37. 不重启JVM，替换掉已经加载的类
+39. Spring的Bean生命周期
+45. 还在封装各种Util工具类
+49. SpringBoot启动原理
+54. 如何快速判断某URL是否在20亿的网址URL集合中
+55. i++线程安全吗？
+57. 为什么HashMap并发时会引起死循环
+59. nginx常用配置清单
+61. 线程池中多余的线程是如何回收的
+68. Spring中如Service有多个实现类，它怎么知道该注入哪个ServiceImpl
+69. Integer、new Integer()和int比较的面试题
+70. kill -9
+71. Spring MVC的处理流程是怎样的
+72. Spring事务失效的场景有哪些？如何解决？
+73. 在IDEA中的各种调试技巧，轻松定位Bug
+75. Java8之Optional判空，简化判空操作
+78. 7年Java后端被淘汰
+81. 你只会用！=null判空?
+82. 分布式唯一ID生成方案
+83. 有了HTTP，为什么还用RPC？
+86. PO,VO,DAO,BO,POJO之间的区别你懂吗？
+87. 到底用Spring BeanUtils还是Apache BeanUtils?
+88. Git这样回退代码，才足够优雅
+90. SpringBoot部署Jar文件
+93. Spring Boot搭建ELK，这才是正确看日志的方式
+94. IOC的原理及手动实现
+101. SpringBoot优雅的配置拦截器方式
+116. 一条update语句引起的事故
+117. 在SQL中如何处理NULL值
+119. SQL调优实战
+124. 数据库连接池到底应该设多大？
+125. 线程池如何重复利用空闲的线程执行任务的
+126. 定时任务的五种创建方式
+127. QPS、TPS、并发用户数、吞吐量
+128. 拒绝kill -9暴力停止，优雅停止Spring Boot服务
+130. SpringBoot实现登录拦截器
+131. 使用JWT来保护你的SpringBoot应用
+135. new一个对象背后发生了什么
+136. SpringBoot常用注解梳理
+144. 阿里云Redis开发规范
+145. Spring最常用的7大类注解
+147. Spring常见的十大错误
+157. 面试问烂的Spring AOP原理、Spring MVC过程
+158. git提交规范
+167. Spring Boot静态资源处理
+169. MyBatis中的$和#
+171. MyBatis框架下SQL注入攻击的3种方式
+173. Java日志体系
+175. SpringBoot实现Auth认证
+177. Chrome插件
+178. 单点登录8张漫画
+181. Spring为什么建议构造器注入？
+186. Java中的锁有哪些
+191. 统一结果，统一异常，统一日志
+202. @Autowired注解到底怎么实现的
+207. RateLimiter
+209. Java正则表达式处理复杂文本
+210. 基于Redis实现分布式锁思考
+217. Spring AOP的实现原理及应用场景
+228. SpringBoot注解最全详细
+231. SpringSecurity+JWT
+236. Redis延时队列的简单实现
+268. Spring的Bean实例化过程
+307. 不懂isEmpty和isBlank的区别
+311. SpringBoot自动配置原理
+313. Java反射机制的应用
+314. SpringBoot解决跨域
+330. 策略模式+反射工厂
+333. 开放API接口签名验证
+337. 单点登录的三种实现方式
+349. 分布式事务，解决方案
+352. 如何画出优秀的架构图
+353. RabbitMQ和Kafka到底怎么选
+356. Java数组转List的三种方式
+389. Java反射到底慢在哪？
+398. 如何解决Spring循环依赖问题
+401. 架构图
+403. ConcurrentHashMap面试题
+405. toString、String.valueOf、(String)区别
+413. SpringBoot注解原理、自动装配原理
+475. Spring AOP、AspectJ、CGLIB
+478. 18个Java8日期处理
+479. 中断一个线程
+480. 52条SQL语句，性能优化
+487. Spring事务设计原理
+489. Chrome插件
+510. Sharding-Jdbc实现读写分离 + 分库分表
+514. Tomcat组成与工作原理
+515. 女朋友定位地址
+520. Nacos服务注册的原理
+529. Nginx通过Lua + Redis动态封禁IP
+535. Nginx配置清单
+543. SOA和微服务的区别
+551. 图解分库分表
+561. OAuth2 vs JWT
+562. 简单的JVM调优经历
+598. Spring Security和Shiro如何选择
+602. 跨库分页/分表分页
+610. Java日志框架适配
+630. IDEA详解配置
+638. CompletableFuture
+641. SpringBoot全局异常拦截器
+649. SpringBoot物种热部署
+651. 用户登录验证业务流程
+678. SQL的执行顺序
+696. Lambada实现原理
+702. 合理配置线程数
+703. 如何设计API返回码
+706. 入门到精通SpringSecurity
+710. 技术总监需要会什么
+711. MyBatis的执行流程
+751. MySQL的varchar
+752. 分布式ID
+762. 尽量避免使用IN和NOT IN
+790. SpringBean的实例化过程
+796. ConcurrentHashMap面试灵魂拷问
+
+
+565.Redis实现限流的三种方式
+564.PageHelper使用ThreadLocal的线程复用问题
+559. 分布式事务解决方案
+549. Kafka看时间轮算法
+548. 如何保护SpringBoot配置文件中的敏感信息
+542. 延时消息常见实现方案
+528. 存ip地址用什么数据类型比较好
+537. 基于Redis实现延时队列服务
+529， 何为微服务、网关、服务发现/注册
+514. 分布式接口幂等性，分布式限流
+509. MyBatis中
+508. 封禁ip
+504. JVM调优
+473. 不要直接使用@Async注解
+472. MyBatis的执行流程
+470. MyBatis Plus是如何动态SQL语句的
+466. 蓝绿发布、滚动发布、灰度发布
+464. 实现Auth认证的几种方式
+463. 动静分离
+457. Redis缓存使用技巧
+455. Chrome插件
+445. MyBatis插入大量数据
+436. MySql大批量插入，如何过滤重复数据
+433.SpringBoot参数校验
+430. 实现带你赞、取消点赞
+429. Kafka中值得学习的设计
+411. Reids限流
+409. 并发架构
+351. Jmeter做性能测试
+348. 内存泄漏排查
+338. isEmpty和isBlank的却别
+326. Java泛型
