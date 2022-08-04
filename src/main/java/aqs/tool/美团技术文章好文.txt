@@ -1,0 +1,38 @@
+https://tech.meituan.com/2020/04/02/java-pooling-pratice-in-meituan.html Java线程池实现原理及其在美团业务中的实践
+https://tech.meituan.com/2019/02/14/talk-about-java-magic-class-unsafe.html Java魔法类：Unsafe应用解析
+https://tech.meituan.com/2019/12/05/aqs-theory-and-apply.html 从ReentrantLock的实现看AQS的原理及应用
+https://tech.meituan.com/2018/11/15/java-lock.html 不可不说的Java“锁”事
+https://tech.meituan.com/2022/05/12/principles-and-practices-of-completablefuture.html CompletableFuture原理与实践-外卖商家端API的异步化
+
+https://tech.meituan.com/2020/11/12/java-9-cms-gc.html Java中9种常见的CMS GC问题分析与解决
+https://tech.meituan.com/2016/09/23/g1.html Java Hotspot G1 GC的一些关键技术
+https://tech.meituan.com/2019/01/03/spring-boot-native-memory-leak.html Spring Boot引起的“堆外内存泄漏”排查及经验总结
+https://tech.meituan.com/2020/08/06/new-zgc-practice-in-meituan.html 新一代垃圾回收器ZGC的探索与实践
+
+https://tech.meituan.com/2014/06/30/mysql-index.html MySQL索引原理及慢查询优化
+https://tech.meituan.com/2022/04/21/slow-query-optimized-advice-driven-by-cost-model.html 基于代价的慢查询优化建议
+
+https://tech.meituan.com/2017/03/17/cache-about.html 缓存那些事
+https://tech.meituan.com/2020/07/01/kv-squirrel-cellar.html 美团万亿级 KV 存储架构与实践
+https://tech.meituan.com/2018/01/19/mybatis-cache.html 聊聊MyBatis缓存机制
+https://tech.meituan.com/2021/01/14/kafka-ssd.html 基于SSD的Kafka应用层缓存架构设计与实现
+
+https://tech.meituan.com/2015/01/13/kafka-fs-design-theory.html Kafka文件存储机制那些事
+
+https://xiaomi-info.github.io/2020/01/02/distributed-transaction 分布式事务，这一篇就够了
+https://tech.meituan.com/2016/12/02/performance-tunning.html 常见性能优化策略的总结
+https://tech.meituan.com/2018/11/22/instant-logistics-distributed-system-architecture.html 美团即时物流的分布式系统架构设计
+https://tech.meituan.com/2016/09/29/distributed-system-mutually-exclusive-idempotence-cerberus-gtis.html 分布式系统互斥性与幂等性问题的分析与解决
+
+https://tech.meituan.com/2022/04/28/composable-architecture-in-bff-2022.html 标准化思想及组装式架构在后端BFF中的实践
+https://tech.meituan.com/2022/03/10/interesting-talk-about-design-patterns.html 设计模式二三事
+https://tech.meituan.com/2020/03/19/design-pattern-practice-in-marketing.html 设计模式在外卖营销业务中的实践
+https://tech.meituan.com/2017/02/17/change-log-level.html 日志级别动态调整——小工具解决大问题
+https://tech.meituan.com/2018/09/27/quake-introduction.html 全链路压测平台（Quake）在美团中的实践
+https://tech.meituan.com/2019/02/14/full-link-pressure-test-automation.html 全链路压测自动化实践
+https://tech.meituan.com/2015/02/26/serialization-vs-deserialization.html 序列化和反序列化
+https://tech.meituan.com/2022/01/13/phoenix-cdn.html 从0到1：美团端侧CDN容灾解决方案
+https://tech.meituan.com/2016/11/04/nio.html Java NIO浅析
+https://tech.meituan.com/2022/03/17/java-hotswap-sonic.html Java系列 | 远程热部署在美团的落地实践
+https://tech.meituan.com/2021/09/16/operational-logbook.html 如何优雅地记录操作日志？
+https://tech.meituan.com/2018/09/27/fe-security.html 前端安全系列（一）：如何防止XSS攻击？
