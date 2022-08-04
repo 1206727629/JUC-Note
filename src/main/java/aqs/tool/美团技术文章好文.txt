@@ -36,3 +36,4 @@ https://tech.meituan.com/2016/11/04/nio.html Java NIO浅析
 https://tech.meituan.com/2022/03/17/java-hotswap-sonic.html Java系列 | 远程热部署在美团的落地实践
 https://tech.meituan.com/2021/09/16/operational-logbook.html 如何优雅地记录操作日志？
 https://tech.meituan.com/2018/09/27/fe-security.html 前端安全系列（一）：如何防止XSS攻击？
+https://tech.meituan.com/2020/09/03/meituantech-basic-skills.html 工程师的基本功是什么？该如何练习？听听美团技术大咖怎么说
